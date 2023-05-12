@@ -1,10 +1,15 @@
 --Tabla de Pelis
 CREATE TABLE PELICULAS (
-Titulo varchar(100) PRIMARY KEY,
+Id Numeric(3) PRIMARY KEY,
+Titulo varchar(100),
 Duracion Numeric(3),
 Genero varchar(50),
-Año Numeric(4)
+Año Numeric(4),
+Portada MEDIUMBLOB,
+Portada_url varchar(100)
 );
+
+INSERT INTO PELICULAS VALUES(1,'Super Mario Bros: La película', 92, 'Animación', 2023, 'C:\Users\josem\Escritorio\Programación\ProyectoFinal\src\jvmMain\resources\Películas\SMB.jpg', "Películas\\SMB.jpg");
 
 --Tabla de Empleados
 CREATE TABLE EMPLEADOS (

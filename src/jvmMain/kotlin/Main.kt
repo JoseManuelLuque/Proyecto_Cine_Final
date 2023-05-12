@@ -181,7 +181,6 @@ fun App() {
             MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja),
-
                     ) {
                     Image(
                         painter = painterResource("ventanaInicioSesion.png"),
@@ -231,28 +230,26 @@ fun App() {
                                         val statement1 = conexion.createStatement()
                                         val resultSet1 = statement1.executeQuery(sql1)
 
-                                        var user_econtrado = false
-                                        var password_encontrado = false
+                                        var userEcontrado = false
+                                        var passwordEncontrado = false
 
                                         while (resultSet.next()){
-                                            var check_user = resultSet.getString("Usuario")
+                                            val checkUser = resultSet.getString("Usuario")
 
-                                            if (check_user == user){
-                                                println("Usuario Encontrado")
-                                                user_econtrado = true
+                                            if (checkUser == user){
+                                                userEcontrado = true
                                             }
                                         }
                                         while (resultSet1.next()){
-                                            var check_pass = resultSet1.getString("Contraseña")
+                                            val checkPass = resultSet1.getString("Contraseña")
 
-                                            if (check_pass == password){
-                                                println("Contraseña Encontrado")
-                                                password_encontrado = true
+                                            if (checkPass == password){
+                                                passwordEncontrado = true
                                             }
                                         }
 
-                                        if (user_econtrado == true && password_encontrado == true){
-                                            println("Ambos Encontrado")
+                                        if (userEcontrado && passwordEncontrado){
+                                            println("Inicio de sesión completado")
                                         }
                                     })
                                     .width(150.dp)
@@ -276,7 +273,96 @@ fun App() {
 
         "ventanaCartelera" -> {
             MaterialTheme{
+                Box(
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ){
+                    Image(
+                        painter = painterResource("ventanaCartelera.png"),
+                        contentDescription = "Ventana de Cartelera",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    IconButton(onClick = {ventanaActiva = "ventanaInicio"}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Row {
+                            val id = 1
+                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                            val statement = conexion.createStatement()
+                            val resultSet = statement.executeQuery(sql)
+                            var aux = ""
+                            while (resultSet.next()) {
+                                val portada_url = resultSet.getString("Portada_url")
+                                aux = portada_url
+                            }
 
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 2",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 3",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(50.dp))
+                        Row {
+                            val id = 1
+                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                            val statement = conexion.createStatement()
+                            val resultSet = statement.executeQuery(sql)
+                            var aux = ""
+                            while (resultSet.next()) {
+                                val portada_url = resultSet.getString("Portada_url")
+                                aux = portada_url
+                            }
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+                        }
+
+                    }
+                }
             }
         }
     }
