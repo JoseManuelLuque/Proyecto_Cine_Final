@@ -145,6 +145,8 @@ fun App() {
                                             setString(2, password)
                                             executeUpdate()
                                         }
+                                        println("Registro de $user correcto")
+                                        ventanaActiva = "ventanaInicio"
                                     }
                                     .width(150.dp)
                                     .height(50.dp)
@@ -165,7 +167,7 @@ fun App() {
             }
         }
 
-        "ventanaInicioSesion" ->{
+        "ventanaInicioSesion" -> {
             MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja),
@@ -319,8 +321,8 @@ fun App() {
                             val resultSet = statement.executeQuery(sql)
                             var aux = ""
                             while (resultSet.next()) {
-                                val portada_url = resultSet.getString("Portada_url")
-                                aux = portada_url
+                                val portadaUrl = resultSet.getString("PORTADA_URL")
+                                aux = portadaUrl
                             }
 
                             Image(
@@ -356,8 +358,8 @@ fun App() {
                             val resultSet = statement.executeQuery(sql)
                             var aux = ""
                             while (resultSet.next()) {
-                                val portada_url = resultSet.getString("Portada_url")
-                                aux = portada_url
+                                val portadaUrl = resultSet.getString("PORTADA_URL")
+                                aux = portadaUrl
                             }
 
                             Image(
@@ -415,8 +417,8 @@ fun App() {
                             val resultSet = statement.executeQuery(sql)
                             var aux = ""
                             while (resultSet.next()) {
-                                val portada_url = resultSet.getString("Portada_url")
-                                aux = portada_url
+                                val portadaUrl = resultSet.getString("PORTADA_URL")
+                                aux = portadaUrl
                             }
 
                             Image(
@@ -452,8 +454,8 @@ fun App() {
                             val resultSet = statement.executeQuery(sql)
                             var aux = ""
                             while (resultSet.next()) {
-                                val portada_url = resultSet.getString("Portada_url")
-                                aux = portada_url
+                                val portadaUrl = resultSet.getString("PORTADA_URL")
+                                aux = portadaUrl
                             }
 
                             Image(
@@ -491,6 +493,11 @@ fun App() {
                 Box(
                     modifier = Modifier.background(naranja)
                 ){
+                    IconButton(onClick = {ventanaActiva = "ventanaInicio"
+                                            user = ""
+                                            password = ""}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
@@ -571,14 +578,30 @@ fun App() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Row{
-                        Image(
-                            painter = painterResource("botonCartelera.png"),
-                            contentDescription = "Boton para acceder a la cartelera",
-                            modifier = Modifier
-                                .clickable(onClick = {ventanaActiva = "ventanaCartelera"})
-                                .width(150.dp)
-                                .height(50.dp)
-                        )
+                            Image(
+                                painter = painterResource("botonCartelera.png"),
+                                contentDescription = "Boton para acceder a la cartelera",
+                                modifier = Modifier
+                                    .clickable(onClick = {ventanaActiva = "ventanaCartelera"})
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(35.dp)
+                            )
+
+                            Image(
+                                painter = painterResource("botonCerrarSesion.png"),
+                                contentDescription = "Boton para cerrar sesion",
+                                modifier = Modifier
+                                    .clickable(onClick = {ventanaActiva = "ventanaInicio"
+                                                            user = ""
+                                                            password = ""})
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
                         }
 
                     }
