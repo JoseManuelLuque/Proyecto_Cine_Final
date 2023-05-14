@@ -26,18 +26,6 @@ fun App() {
     var ventanaActiva by remember {mutableStateOf("ventanaInicio") }
     var user by remember {mutableStateOf("") }
     var password by remember {mutableStateOf("") }
-    /*try {
-        Class.forName("com.mysql.cj.jdbc.Driver")
-        val conexion = DriverManager.getConnection(url, usuario, contrasenia)
-        println("Conexión exitosa")
-        val stmt = conexion.prepareStatement("SELECT * FROM EMPLEADOS;")
-        stmt.run {  }
-    }
-    catch (e: SQLException) {
-        println("Error en la conexión: ${e.message}")
-    } catch (e: ClassNotFoundException) {
-        println("No se encontró el driver JDBC: ${e.message}")
-    }*/
 
     Class.forName("com.mysql.cj.jdbc.Driver")
     val conexion = DriverManager.getConnection(url, usuario, contrasenia)
@@ -222,16 +210,30 @@ fun App() {
                                 contentDescription = "Boton Iniciar Sesion",
                                 modifier = Modifier
                                     .clickable(onClick = {
+                                        //Consulta Usuario Cliente
                                         val sql = "SELECT USUARIO FROM USUARIOS WHERE USUARIO = '$user'"
                                         val statement = conexion.createStatement()
                                         val resultSet = statement.executeQuery(sql)
 
+                                        //Consulta Contraseña Cliente
                                         val sql1 = "SELECT CONTRASEÑA FROM USUARIOS WHERE CONTRASEÑA = '$password'"
                                         val statement1 = conexion.createStatement()
                                         val resultSet1 = statement1.executeQuery(sql1)
 
+                                        //Consulta Usuario Admin
+                                        val sqlUserAdmin = "SELECT USUARIO FROM ADMIN WHERE USUARIO = '$user'"
+                                        val statementUserAdmin = conexion.createStatement()
+                                        val resultUserAdmin = statementUserAdmin.executeQuery(sqlUserAdmin)
+
+                                        //Consulta Contraseña Admin
+                                        val sqlPassAdmin = "SELECT CONTRASEÑA FROM ADMIN WHERE CONTRASEÑA = '$password'"
+                                        val statementPassAdmin = conexion.createStatement()
+                                        val resultPassAdmin = statementPassAdmin.executeQuery(sqlPassAdmin)
+
                                         var userEcontrado = false
                                         var passwordEncontrado = false
+                                        var userAdmin = false
+                                        var passwordAdmin = false
 
                                         while (resultSet.next()){
                                             val checkUser = resultSet.getString("Usuario")
@@ -250,6 +252,27 @@ fun App() {
 
                                         if (userEcontrado && passwordEncontrado){
                                             println("Inicio de sesión completado")
+                                            ventanaActiva = "ventanaUsuario"
+                                        }
+
+                                        while (resultUserAdmin.next()){
+                                            val checkUserAdmin = resultUserAdmin.getString("Usuario")
+
+                                            if (checkUserAdmin == user){
+                                                userAdmin = true
+                                            }
+                                        }
+                                        while (resultPassAdmin.next()){
+                                            val checkPassAdmin = resultPassAdmin.getString("Contraseña")
+
+                                            if (checkPassAdmin == password){
+                                                passwordAdmin = true
+                                            }
+                                        }
+
+                                        if (userAdmin && passwordAdmin){
+                                            println("Bienvenido Admin $user")
+                                            ventanaActiva = "ventanaAdmin"
                                         }
                                     })
                                     .width(150.dp)
@@ -308,6 +331,7 @@ fun App() {
                                     .size(150.dp)
                             )
 
+
                             Image(
                                 painter = painterResource(aux),
                                 contentDescription = "Portada 2",
@@ -365,9 +389,204 @@ fun App() {
                 }
             }
         }
+
+        "ventanaCarteleraCompra" -> {
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ){
+                    Image(
+                        painter = painterResource("ventanaCartelera.png"),
+                        contentDescription = "Ventana de Cartelera",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    IconButton(onClick = {ventanaActiva = "ventanaInicio"}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Row {
+                            val id = 1
+                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                            val statement = conexion.createStatement()
+                            val resultSet = statement.executeQuery(sql)
+                            var aux = ""
+                            while (resultSet.next()) {
+                                val portada_url = resultSet.getString("Portada_url")
+                                aux = portada_url
+                            }
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 2",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 3",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(50.dp))
+                        Row {
+                            val id = 1
+                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                            val statement = conexion.createStatement()
+                            val resultSet = statement.executeQuery(sql)
+                            var aux = ""
+                            while (resultSet.next()) {
+                                val portada_url = resultSet.getString("Portada_url")
+                                aux = portada_url
+                            }
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+
+                            Image(
+                                painter = painterResource(aux),
+                                contentDescription = "Portada 1",
+                                modifier = Modifier
+                                    .clickable {}
+                                    .size(150.dp)
+                            )
+                        }
+
+                    }
+                }
+            }
+        }
+
+        "ventanaAdmin" -> {
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.background(naranja)
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Image(
+                            painter = painterResource("botonEliminarUsuario.png"),
+                            contentDescription = "Boton para elimniar un usuario",
+                            modifier = Modifier
+                                .clickable {ventanaActiva = "ventanaEliminarUsuario"
+                                }
+                                .width(150.dp)
+                                .height(50.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        "ventanaEliminarUsuario" -> {
+            var eliminarUsuario by remember {mutableStateOf("") }
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.background(naranja)
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        TextField(
+                            value = eliminarUsuario,
+                            onValueChange = { eliminarUsuario = it },
+                            label = { Text("Usuario a eliminar") },
+                            modifier = Modifier.background(Color.White)
+                        )
+                        Image(
+                            painter = painterResource("botonEliminarUsuario.png"),
+                            contentDescription = "Boton para elimniar un usuario",
+                            modifier = Modifier
+                                .clickable {
+                                    val comando = conexion.prepareStatement("DELETE FROM USUARIOS WHERE USUARIO = ?")
+                                    comando.run {
+                                        setString(1, eliminarUsuario)
+                                        executeUpdate()
+                                        println("Usuario $eliminarUsuario eliminado")
+                                    }
+
+                                }
+                                .width(150.dp)
+                                .height(50.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        "ventanaUsuario" -> {
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.background(naranja).fillMaxSize()
+                ){
+                    Image(
+                        painter = painterResource("Pagina_Inicio.png"),
+                        contentDescription = "Ventana de Inicio",
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight().fillMaxSize()
+                    )
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.background(Color.White)
+                    ){
+                        Text("Bienvenido $user")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Row{
+                        Image(
+                            painter = painterResource("botonCartelera.png"),
+                            contentDescription = "Boton para acceder a la cartelera",
+                            modifier = Modifier
+                                .clickable(onClick = {ventanaActiva = "ventanaCartelera"})
+                                .width(150.dp)
+                                .height(50.dp)
+                        )
+                        }
+
+                    }
+                }
+            }
+        }
     }
 }
-
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication, title = "Cine Josema", icon = painterResource("Icono.png")) {

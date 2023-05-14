@@ -27,3 +27,17 @@ CREATE TABLE USUARIOS (
 Usuario varchar(100) PRIMARY KEY,
 Contraseña varchar(25)
 );
+
+--Tabla de Administradores
+CREATE TABLE ADMIN (
+Usuario varchar(100) PRIMARY KEY,
+Contraseña varchar(25)
+);
+
+INSERT INTO ADMIN VALUES('Josema', 'Josema');
+
+--Tabla de Sesiones
+CREATE TABLE SESION (
+Sala Numeric(2),
+
+);
