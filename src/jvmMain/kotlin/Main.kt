@@ -50,7 +50,7 @@ fun App() {
                 ) {
                     //Imagen de Fondo
                     Image(
-                        painter = painterResource("Pagina_Inicio.png"),
+                        painter = painterResource("ventanaInicio.png"),
                         contentDescription = "Ventana de Inicio",
                         modifier = Modifier.fillMaxWidth().fillMaxHeight().fillMaxSize()
                     )
@@ -752,3 +752,42 @@ fun App() {
 
     }
 }
+
+/*fun generarEntrada (usuario: Usuario): String{
+    val url = "jdbc:mysql://localhost:3306/PROGRAMACION"
+    val usuario = "root"
+    val contrasenia = "Alberti956"
+    Class.forName("com.mysql.cj.jdbc.Driver")
+    val conexion = DriverManager.getConnection(url, usuario, contrasenia)
+
+    var codigoEntrada = ""
+    var contador = 0
+
+    for (i in 1..12){
+        val letraMay = (65..90).random()
+        val letraMin = (97..122).random()
+        val numero = (48..57).random()
+        contador = (1..3).random()
+        when (contador){
+            1 -> { codigoEntrada += letraMay.toChar() }
+            2 -> { codigoEntrada += letraMin.toChar() }
+            3 -> { codigoEntrada += numero.toChar() }
+        }
+    }
+
+    val comandoComprobar = "SELECT USUARIO FROM USUARIOS WHERE USUARIO = '$codigoEntrada'"
+    val statement1 = conexion.createStatement()
+    val resultado = statement1.executeQuery(comandoComprobar)
+    var aux = ""
+    while (resultado.next()) {
+        val usuarioExiste = resultado.getString("USUARIO")
+        aux = usuarioExiste
+    }
+
+    if (aux == codigoEntrada){
+        TODO()
+    }
+
+    else{return codigoEntrada}
+
+}*/

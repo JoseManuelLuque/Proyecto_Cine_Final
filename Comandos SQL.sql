@@ -42,3 +42,9 @@ Sala Numeric(2),
 Hora VARCHAR(9),
 
 );
+
+--Tabla de Entradas
+CREATE TABLE ENTRADAS (
+Codigo Numeric(2) PRIMARY KEY,
+USUARIO VARCHAR(9),
+);
