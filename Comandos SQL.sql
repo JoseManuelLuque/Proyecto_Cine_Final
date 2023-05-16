@@ -39,5 +39,6 @@ INSERT INTO ADMIN VALUES('Josema', 'Josema');
 --Tabla de Sesiones
 CREATE TABLE SESION (
 Sala Numeric(2),
+Hora VARCHAR(9),
 
 );

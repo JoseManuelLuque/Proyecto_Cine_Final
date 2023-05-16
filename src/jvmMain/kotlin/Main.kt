@@ -3,6 +3,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -11,10 +12,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import java.sql.DriverManager
+
+fun main() = application {
+    Window(onCloseRequest = ::exitApplication, title = "Cine Josema", icon = painterResource("Icono.png")) {
+        App()
+    }
+}
 
 @Composable
 @Preview
@@ -30,7 +39,9 @@ fun App() {
     Class.forName("com.mysql.cj.jdbc.Driver")
     val conexion = DriverManager.getConnection(url, usuario, contrasenia)
 
+
     when (ventanaActiva) {
+        //Parte Usuario SIN REGISTRAR
         "ventanaInicio" -> {
             MaterialTheme {
                 //Caja la cual llevará el contenido de la ventana dentro
@@ -96,8 +107,7 @@ fun App() {
         "ventanaRegistro" -> {
             MaterialTheme {
                 Box(
-                    modifier = Modifier.fillMaxSize().background(naranja),
-
+                    modifier = Modifier.fillMaxSize().background(naranja)
                     ) {
                     Image(
                         painter = painterResource("ventanaRegistro.png"),
@@ -128,7 +138,9 @@ fun App() {
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
-                                label = { Text("Contraseña") }
+                                label = { Text("Contraseña") },
+                                visualTransformation = PasswordVisualTransformation(),
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                             )
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -171,7 +183,7 @@ fun App() {
             MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja),
-                    ) {
+                ) {
                     Image(
                         painter = painterResource("ventanaInicioSesion.png"),
                         contentDescription = "Ventana de Inicio",
@@ -201,7 +213,9 @@ fun App() {
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
-                                label = { Text("Contraseña") }
+                                label = { Text("Contraseña") },
+                                visualTransformation = PasswordVisualTransformation(),
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                             )
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -392,7 +406,62 @@ fun App() {
             }
         }
 
-        "ventanaCarteleraCompra" -> {
+        //Parte Usuario Registrado
+        "ventanaUsuario" -> {
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.background(naranja).fillMaxSize()
+                ){
+                    Image(
+                        painter = painterResource("Pagina_Inicio.png"),
+                        contentDescription = "Ventana de Inicio",
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight().fillMaxSize()
+                    )
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.background(Color.White)
+                    ){
+                        Text("Bienvenido $user")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Row{
+                            Image(
+                                painter = painterResource("botonCartelera.png"),
+                                contentDescription = "Boton para acceder a la cartelera",
+                                modifier = Modifier
+                                    .clickable(onClick = {ventanaActiva = "ventanaCartelera"})
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(35.dp)
+                            )
+
+                            Image(
+                                painter = painterResource("botonCerrarSesion.png"),
+                                contentDescription = "Boton para cerrar sesion",
+                                modifier = Modifier
+                                    .clickable(onClick = {ventanaActiva = "ventanaInicio"
+                                        user = ""
+                                        password = ""})
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+                        }
+
+                    }
+                }
+            }
+        }
+
+       /*TODO*/"ventanaCarteleraCompra" -> {
             MaterialTheme{
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
@@ -488,16 +557,17 @@ fun App() {
             }
         }
 
+        //Parte Administrativa
         "ventanaAdmin" -> {
             MaterialTheme{
                 Box(
                     modifier = Modifier.background(naranja)
                 ){
-                    IconButton(onClick = {ventanaActiva = "ventanaInicio"
-                                            user = ""
-                                            password = ""}) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
-                    }
+                    Image(
+                        painter = painterResource("ventanaAdmin.png"),
+                        contentDescription = "Ventana Administracion",
+                        modifier = Modifier.fillMaxSize()
+                    )
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
@@ -512,6 +582,37 @@ fun App() {
                                 .width(150.dp)
                                 .height(50.dp)
                         )
+                        Spacer(
+                            modifier = Modifier
+                                .padding(35.dp)
+                        )
+
+                        Image(
+                            painter = painterResource("botonCerrarSesion.png"),
+                            contentDescription = "Boton para cerrar sesion",
+                            modifier = Modifier
+                                .clickable(onClick = {ventanaActiva = "ventanaInicio"
+                                    user = ""
+                                    password = ""})
+                                .width(150.dp)
+                                .height(50.dp)
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .padding(35.dp)
+                        )
+
+                        Image(
+                            painter = painterResource("boton_registrarse.png"),
+                            contentDescription = "Boton para registrar nuevo admin",
+                            modifier = Modifier
+                                .clickable(onClick = {ventanaActiva = "ventanaAñadirAdmin"
+                                    user = ""
+                                    password = ""})
+                                .width(150.dp)
+                                .height(50.dp)
+                        )
+
                     }
                 }
             }
@@ -523,6 +624,9 @@ fun App() {
                 Box(
                     modifier = Modifier.background(naranja)
                 ){
+                    IconButton(onClick = {ventanaActiva = "ventanaAdmin"}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
@@ -539,13 +643,25 @@ fun App() {
                             contentDescription = "Boton para elimniar un usuario",
                             modifier = Modifier
                                 .clickable {
-                                    val comando = conexion.prepareStatement("DELETE FROM USUARIOS WHERE USUARIO = ?")
-                                    comando.run {
-                                        setString(1, eliminarUsuario)
-                                        executeUpdate()
-                                        println("Usuario $eliminarUsuario eliminado")
+                                    val comandoComprobar = "SELECT USUARIO FROM USUARIOS WHERE USUARIO = '$eliminarUsuario'"
+                                    val statement1 = conexion.createStatement()
+                                    val resultSet1 = statement1.executeQuery(comandoComprobar)
+                                    var aux = ""
+                                    while (resultSet1.next()) {
+                                        val usuarioExiste = resultSet1.getString("USUARIO")
+                                        aux = usuarioExiste
                                     }
 
+                                    if (aux == eliminarUsuario) {
+                                        val comando =
+                                            conexion.prepareStatement("DELETE FROM USUARIOS WHERE USUARIO = ?")
+                                        comando.run {
+                                            setString(1, eliminarUsuario)
+                                            executeUpdate()
+                                            println("Usuario $eliminarUsuario eliminado")
+                                        }
+                                    }
+                                    else println("Usuario $eliminarUsuario no existe")
                                 }
                                 .width(150.dp)
                                 .height(50.dp)
@@ -555,90 +671,84 @@ fun App() {
             }
         }
 
-        "ventanaUsuario" -> {
-            MaterialTheme{
+        "ventanaAñadirAdmin" -> {
+            MaterialTheme {
                 Box(
-                    modifier = Modifier.background(naranja).fillMaxSize()
-                ){
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ) {
                     Image(
-                        painter = painterResource("Pagina_Inicio.png"),
+                        painter = painterResource("ventanaRegistro.png"),
                         contentDescription = "Ventana de Inicio",
-                        modifier = Modifier.fillMaxWidth().fillMaxHeight().fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                     )
-                    Row(
-                        verticalAlignment = Alignment.Top,
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier.background(Color.White)
-                    ){
-                        Text("Bienvenido $user")
+                    IconButton(onClick = {ventanaActiva = "ventanaAdmin"}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Row{
+                        Row(
+                            modifier = Modifier.background(Color.White)
+                        ){
+                            TextField(
+                                value = user,
+                                onValueChange = { user = it },
+                                label = { Text("Usuario") }
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        Row(
+                            modifier = Modifier.background(Color.White)
+                        ){
+                            TextField(
+                                value = password,
+                                onValueChange = { password = it },
+                                label = { Text("Contraseña") },
+                                visualTransformation = PasswordVisualTransformation(),
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(10.dp))
+
+                        Row {
                             Image(
-                                painter = painterResource("botonCartelera.png"),
-                                contentDescription = "Boton para acceder a la cartelera",
+                                painter = painterResource("boton_registrarse.png"),
+                                contentDescription = "Boton Registrarse",
                                 modifier = Modifier
-                                    .clickable(onClick = {ventanaActiva = "ventanaCartelera"})
+                                    .clickable {
+                                        val comando = conexion.prepareStatement("INSERT INTO ADMIN (Usuario , Contraseña) VALUES (?, ?)")
+                                        comando.run {
+                                            setString(1, user)
+                                            setString(2, password)
+                                            executeUpdate()
+                                        }
+                                        println("Registro de Admin $user correcto")
+                                        ventanaActiva = "ventanaAdmin"
+                                    }
                                     .width(150.dp)
                                     .height(50.dp)
                             )
-
-                            Spacer(
-                                modifier = Modifier
-                                    .padding(35.dp)
-                            )
-
+                            Spacer(modifier = Modifier.padding(10.dp))
                             Image(
-                                painter = painterResource("botonCerrarSesion.png"),
-                                contentDescription = "Boton para cerrar sesion",
+                                painter = painterResource("botonLimpiar.png"),
+                                contentDescription = "Boton Limpiear Celdas",
                                 modifier = Modifier
-                                    .clickable(onClick = {ventanaActiva = "ventanaInicio"
-                                                            user = ""
-                                                            password = ""})
+                                    .clickable { user = ""
+                                        password = ""}
                                     .width(150.dp)
                                     .height(50.dp)
                             )
                         }
-
                     }
                 }
             }
         }
-    }
-}
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication, title = "Cine Josema", icon = painterResource("Icono.png")) {
-        App()
-        /*val naranja = Color.hsv(25.0.toFloat(), 1.0.toFloat(), 1.0.toFloat())
-        TopAppBar(
-            backgroundColor = naranja,
-            contentColor = Color.White,
-            navigationIcon = {
-                IconButton(onClick = {}) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
-                }
-            },
-            title = { Text(text = "CINES JOSEMA") },
-            actions = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    /*Icon(
-                        painter = painterResource(/*TODO*/),
-                        contentDescription = "Leer después"
-                    )*/
-                }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Filled.Share, contentDescription = "Compartir")
-                }
+        "ventanaAñadirPelícula" -> {
 
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Ver más")
-                }
-            }
-        )*/
+        } /*TODO*/
+
     }
 }
