@@ -35,6 +35,7 @@ fun App() {
     var ventanaActiva by remember {mutableStateOf("ventanaInicio") }
     var user by remember {mutableStateOf("") }
     var password by remember {mutableStateOf("") }
+    var peliActiva by remember {mutableStateOf("") }
 
     Class.forName("com.mysql.cj.jdbc.Driver")
     val conexion = DriverManager.getConnection(url, usuario, contrasenia)
@@ -329,18 +330,17 @@ fun App() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Row {
-                            val id = 1
-                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                            var titulo = "Super Mario Bros: La Película"
+                            val sql = "SELECT PORTADA FROM PELICULAS WHERE titulo = '$titulo'"
                             val statement = conexion.createStatement()
                             val resultSet = statement.executeQuery(sql)
-                            var aux = ""
+                            var portada = ""
                             while (resultSet.next()) {
-                                val portadaUrl = resultSet.getString("PORTADA_URL")
-                                aux = portadaUrl
+                                portada = resultSet.getString("PORTADA")
                             }
 
                             Image(
-                                painter = painterResource(aux),
+                                painter = painterResource(portada),
                                 contentDescription = "Portada 1",
                                 modifier = Modifier
                                     .clickable {}
@@ -349,7 +349,7 @@ fun App() {
 
 
                             Image(
-                                painter = painterResource(aux),
+                                painter = painterResource(portada),
                                 contentDescription = "Portada 2",
                                 modifier = Modifier
                                     .clickable {}
@@ -357,7 +357,7 @@ fun App() {
                             )
 
                             Image(
-                                painter = painterResource(aux),
+                                painter = painterResource(portada),
                                 contentDescription = "Portada 3",
                                 modifier = Modifier
                                     .clickable {}
@@ -366,35 +366,34 @@ fun App() {
                         }
                         Spacer(modifier = Modifier.padding(50.dp))
                         Row {
-                            val id = 1
-                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                            val titulo = "Avatar: El sentido del agua"
+                            val sql = "SELECT PORTADA FROM PELICULAS WHERE TITULO = '$titulo'"
                             val statement = conexion.createStatement()
                             val resultSet = statement.executeQuery(sql)
-                            var aux = ""
+                            var portada = ""
                             while (resultSet.next()) {
-                                val portadaUrl = resultSet.getString("PORTADA_URL")
-                                aux = portadaUrl
+                                portada = resultSet.getString("PORTADA")
                             }
 
                             Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 1",
+                                painter = painterResource(portada),
+                                contentDescription = "Portada 4",
                                 modifier = Modifier
                                     .clickable {}
                                     .size(150.dp)
                             )
 
                             Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 1",
+                                painter = painterResource(portada),
+                                contentDescription = "Portada 5",
                                 modifier = Modifier
                                     .clickable {}
                                     .size(150.dp)
                             )
 
                             Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 1",
+                                painter = painterResource(portada),
+                                contentDescription = "Portada 6",
                                 modifier = Modifier
                                     .clickable {}
                                     .size(150.dp)
@@ -413,7 +412,7 @@ fun App() {
                     modifier = Modifier.background(naranja).fillMaxSize()
                 ){
                     Image(
-                        painter = painterResource("Pagina_Inicio.png"),
+                        painter = painterResource("ventanaInicio.png"),
                         contentDescription = "Ventana de Inicio",
                         modifier = Modifier.fillMaxWidth().fillMaxHeight().fillMaxSize()
                     )
@@ -434,7 +433,7 @@ fun App() {
                                 painter = painterResource("botonCartelera.png"),
                                 contentDescription = "Boton para acceder a la cartelera",
                                 modifier = Modifier
-                                    .clickable(onClick = {ventanaActiva = "ventanaCartelera"})
+                                    .clickable(onClick = {ventanaActiva = "ventanaCarteleraCompra"})
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -461,6 +460,16 @@ fun App() {
             }
         }
 
+        "ventanaVacia" -> {
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ){
+
+                }
+            }
+        }
+
        /*TODO*/"ventanaCarteleraCompra" -> {
             MaterialTheme{
                 Box(
@@ -471,7 +480,7 @@ fun App() {
                         contentDescription = "Ventana de Cartelera",
                         modifier = Modifier.fillMaxSize()
                     )
-                    IconButton(onClick = {ventanaActiva = "ventanaInicio"}) {
+                    IconButton(onClick = {ventanaActiva = "ventanaUsuario"}) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -494,7 +503,19 @@ fun App() {
                                 painter = painterResource(aux),
                                 contentDescription = "Portada 1",
                                 modifier = Modifier
-                                    .clickable {}
+                                    .clickable {
+                                        ventanaActiva = "ventanaVacia"
+                                        val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                                        val statement = conexion.createStatement()
+                                        val resultSet = statement.executeQuery(sql)
+                                        var aux = ""
+                                        while (resultSet.next()) {
+                                            val portadaUrl = resultSet.getString("TITULO")
+                                            aux = portadaUrl
+                                        }
+                                        peliActiva = aux
+
+                                    }
                                     .size(150.dp)
                             )
 
@@ -612,7 +633,20 @@ fun App() {
                                 .width(150.dp)
                                 .height(50.dp)
                         )
-
+                        Spacer(
+                            modifier = Modifier
+                                .padding(35.dp)
+                        )
+                        Image(
+                            painter = painterResource("botonAñadirPelicula.png"),
+                            contentDescription = "Boton para registrar nuevo admin",
+                            modifier = Modifier
+                                .clickable(onClick = {ventanaActiva = "ventanaAñadirPelícula"
+                                    user = ""
+                                    password = ""})
+                                .width(150.dp)
+                                .height(50.dp)
+                        )
                     }
                 }
             }
@@ -747,7 +781,102 @@ fun App() {
         }
 
         "ventanaAñadirPelícula" -> {
+            var titulo by remember {mutableStateOf("") }
+            var duracion by remember {mutableStateOf("") }
+            var genero by remember {mutableStateOf("") }
+            var anio by remember {mutableStateOf("") }
+            var portada by remember {mutableStateOf("") }
+            val ruta = "Películas\\"
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ) {
+                    Image(
+                        painter = painterResource("ventanaInicio.png"),
+                        contentDescription = "Ventana de Inicio",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    IconButton(onClick = {ventanaActiva = "ventanaAdmin"}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            modifier = Modifier.background(Color.White)
+                        ){
+                            TextField(
+                                value = titulo,
+                                onValueChange = { titulo = it },
+                                label = { Text("Título") }
+                            )
+                            TextField(
+                                value = duracion,
+                                onValueChange = { duracion = it },
+                                label = { Text("Duración") }
+                            )
+                            TextField(
+                                value = genero,
+                                onValueChange = { genero = it },
+                                label = { Text("Género") }
+                            )
+                            TextField(
+                                value = anio,
+                                onValueChange = { anio = it },
+                                label = { Text("Año de estreno") }
+                            )
+                            TextField(
+                                value = portada,
+                                onValueChange = { portada = it },
+                                label = { Text("portada") }
+                            )
+                        }
 
+
+                        Spacer(modifier = Modifier.padding(10.dp))
+
+                        Row {
+                            Image(
+                                painter = painterResource("botonAñadirPelicula.png"),
+                                contentDescription = "Boton para registrar una nueva película",
+                                modifier = Modifier
+                                    .clickable {
+                                        portada = ruta + portada
+
+                                        val comando = conexion.prepareStatement("INSERT INTO PELICULAS (Titulo, Duracion, Genero, Año, Portada) VALUES (?, ?, ?, ?, ?)")
+                                        comando.run {
+                                            setString(1, titulo)
+                                            setInt(2, duracion.toInt())
+                                            setString(3, genero)
+                                            setInt(4, anio.toInt())
+                                            setString(5, portada)
+                                            executeUpdate()
+                                        }
+                                        println("Pelicula $titulo añadida correctamente")
+                                        ventanaActiva = "ventanaAdmin"
+                                    }
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            Image(
+                                painter = painterResource("botonLimpiar.png"),
+                                contentDescription = "Boton Limpiear Celdas",
+                                modifier = Modifier
+                                    .clickable { titulo = ""
+                                                 genero = ""
+                                                 duracion = ""
+                                                 portada = ""
+                                                 anio = ""}
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+                        }
+                    }
+                }
+            }
         } /*TODO*/
 
     }
