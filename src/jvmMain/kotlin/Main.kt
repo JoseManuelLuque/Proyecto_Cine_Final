@@ -3,6 +3,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.onClick
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import java.sql.DriverManager
@@ -87,7 +89,7 @@ fun App() {
                                 painter = painterResource("botonCartelera.png"),
                                 contentDescription = "Boton para acceder a la cartelera",
                                 modifier = Modifier
-                                    .clickable(onClick = {ventanaActiva = "ventanaCartelera"})
+                                    .clickable(onClick = { ventanaActiva = "ventanaCartelera" })
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -100,7 +102,7 @@ fun App() {
                                 painter = painterResource("boton_iniciar_sesion.png"),
                                 contentDescription = "Boton Iniciar Sesion",
                                 modifier = Modifier
-                                    .clickable(onClick = {ventanaActiva = "ventanaInicioSesion"})
+                                    .clickable(onClick = { ventanaActiva = "ventanaInicioSesion" })
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -115,13 +117,13 @@ fun App() {
             MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
-                    ) {
+                ) {
                     Image(
                         painter = painterResource("ventanaRegistro.png"),
                         contentDescription = "Ventana de Inicio",
                         modifier = Modifier.fillMaxSize()
                     )
-                    IconButton(onClick = {ventanaActiva = "ventanaInicio"}) {
+                    IconButton(onClick = { ventanaActiva = "ventanaInicio" }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -131,7 +133,7 @@ fun App() {
                     ) {
                         Row(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
                             TextField(
                                 value = user,
                                 onValueChange = { user = it },
@@ -141,7 +143,7 @@ fun App() {
                         Spacer(modifier = Modifier.padding(10.dp))
                         Row(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
@@ -158,7 +160,8 @@ fun App() {
                                 contentDescription = "Boton Registrarse",
                                 modifier = Modifier
                                     .clickable {
-                                        val comando = conexion.prepareStatement("INSERT INTO USUARIOS (Usuario , Contraseña) VALUES (?, ?)")
+                                        val comando =
+                                            conexion.prepareStatement("INSERT INTO USUARIOS (Usuario , Contraseña) VALUES (?, ?)")
                                         comando.run {
                                             setString(1, user)
                                             setString(2, password)
@@ -175,8 +178,10 @@ fun App() {
                                 painter = painterResource("botonLimpiar.png"),
                                 contentDescription = "Boton Limpiear Celdas",
                                 modifier = Modifier
-                                    .clickable { user = ""
-                                        password = ""}
+                                    .clickable {
+                                        user = ""
+                                        password = ""
+                                    }
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -196,7 +201,7 @@ fun App() {
                         contentDescription = "Ventana de Inicio",
                         modifier = Modifier.fillMaxSize()
                     )
-                    IconButton(onClick = {ventanaActiva = "ventanaInicio"}) {
+                    IconButton(onClick = { ventanaActiva = "ventanaInicio" }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -206,7 +211,7 @@ fun App() {
                     ) {
                         Row(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
                             TextField(
                                 value = user,
                                 onValueChange = { user = it },
@@ -216,7 +221,7 @@ fun App() {
                         Spacer(modifier = Modifier.padding(10.dp))
                         Row(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
@@ -258,42 +263,42 @@ fun App() {
                                         var userAdmin = false
                                         var passwordAdmin = false
 
-                                        while (resultSet.next()){
+                                        while (resultSet.next()) {
                                             val checkUser = resultSet.getString("Usuario")
 
-                                            if (checkUser == user){
+                                            if (checkUser == user) {
                                                 userEcontrado = true
                                             }
                                         }
-                                        while (resultSet1.next()){
+                                        while (resultSet1.next()) {
                                             val checkPass = resultSet1.getString("Contraseña")
 
-                                            if (checkPass == password){
+                                            if (checkPass == password) {
                                                 passwordEncontrado = true
                                             }
                                         }
 
-                                        if (userEcontrado && passwordEncontrado){
+                                        if (userEcontrado && passwordEncontrado) {
                                             println("Inicio de sesión completado")
                                             ventanaActiva = "ventanaUsuario"
                                         }
 
-                                        while (resultUserAdmin.next()){
+                                        while (resultUserAdmin.next()) {
                                             val checkUserAdmin = resultUserAdmin.getString("Usuario")
 
-                                            if (checkUserAdmin == user){
+                                            if (checkUserAdmin == user) {
                                                 userAdmin = true
                                             }
                                         }
-                                        while (resultPassAdmin.next()){
+                                        while (resultPassAdmin.next()) {
                                             val checkPassAdmin = resultPassAdmin.getString("Contraseña")
 
-                                            if (checkPassAdmin == password){
+                                            if (checkPassAdmin == password) {
                                                 passwordAdmin = true
                                             }
                                         }
 
-                                        if (userAdmin && passwordAdmin){
+                                        if (userAdmin && passwordAdmin) {
                                             println("Bienvenido Admin $user")
                                             ventanaActiva = "ventanaAdmin"
                                         }
@@ -306,8 +311,10 @@ fun App() {
                                 painter = painterResource("botonLimpiar.png"),
                                 contentDescription = "Boton Limpiear Celdas",
                                 modifier = Modifier
-                                    .clickable { user = ""
-                                        password = ""}
+                                    .clickable {
+                                        user = ""
+                                        password = ""
+                                    }
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -318,16 +325,16 @@ fun App() {
         }
 
         "ventanaCartelera" -> {
-            MaterialTheme{
+            MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
-                ){
+                ) {
                     Image(
                         painter = painterResource("ventanaCartelera.png"),
                         contentDescription = "Ventana de Cartelera",
                         modifier = Modifier.fillMaxSize()
                     )
-                    IconButton(onClick = {ventanaActiva = "ventanaInicio"}) {
+                    IconButton(onClick = { ventanaActiva = "ventanaInicio" }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -335,88 +342,121 @@ fun App() {
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
+                        var posicionCartelera = 1
+                        var sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        var statement = conexion.createStatement()
+                        var resultSet = statement.executeQuery(sql)
+                        var portada1 = ""
+                        while (resultSet.next()) {
+                            portada1 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 2
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada2 = ""
+                        while (resultSet.next()) {
+                            portada2 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 3
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada3 = ""
+                        while (resultSet.next()) {
+                            portada3 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 4
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada4 = ""
+                        while (resultSet.next()) {
+                            portada4 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 5
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada5 = ""
+                        while (resultSet.next()) {
+                            portada5 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 6
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada6 = ""
+                        while (resultSet.next()) {
+                            portada6 = resultSet.getString("PORTADA")
+                        }
                         Row {
-                            var posicionCartelera = 3
-                            val sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
-                            val statement = conexion.createStatement()
-                            val resultSet = statement.executeQuery(sql)
-                            var portada = ""
-                            while (resultSet.next()) {
-                                portada = resultSet.getString("PORTADA")
-                            }
-
                             Image(
-                                painter = painterResource(portada),
+                                painter = painterResource(portada1),
                                 contentDescription = "Portada 1",
                                 modifier = Modifier
-                                    .clickable {}
                                     .size(150.dp)
                             )
 
 
                             Image(
-                                painter = painterResource(portada),
+                                painter = painterResource(portada2),
                                 contentDescription = "Portada 2",
                                 modifier = Modifier
-                                    .clickable {}
                                     .size(150.dp)
                             )
 
                             Image(
-                                painter = painterResource(portada),
+                                painter = painterResource(portada3),
                                 contentDescription = "Portada 3",
                                 modifier = Modifier
-                                    .clickable {}
                                     .size(150.dp)
                             )
                         }
-                        Spacer(modifier = Modifier.padding(50.dp))
+                        Spacer(modifier = Modifier.padding(15.dp))
                         Row {
-                            val titulo = "Avatar: El sentido del agua"
-                            val sql = "SELECT PORTADA FROM PELICULAS WHERE TITULO = '$titulo'"
-                            val statement = conexion.createStatement()
-                            val resultSet = statement.executeQuery(sql)
-                            var portada = ""
-                            while (resultSet.next()) {
-                                portada = resultSet.getString("PORTADA")
-                            }
-
                             Image(
-                                painter = painterResource(portada),
+                                painter = painterResource(portada4),
                                 contentDescription = "Portada 4",
                                 modifier = Modifier
-                                    .clickable {}
                                     .size(150.dp)
                             )
 
                             Image(
-                                painter = painterResource(portada),
+                                painter = painterResource(portada5),
                                 contentDescription = "Portada 5",
                                 modifier = Modifier
-                                    .clickable {}
                                     .size(150.dp)
                             )
 
                             Image(
-                                painter = painterResource(portada),
+                                painter = painterResource(portada6),
                                 contentDescription = "Portada 6",
                                 modifier = Modifier
-                                    .clickable {}
                                     .size(150.dp)
                             )
                         }
-
+                        Spacer(modifier = Modifier.padding(30.dp))
+                        Row {
+                            Text(
+                                text = "Si quiere ver las sesiones inicie sesión",
+                                fontSize = 35.sp,
+                                color = Color.White
+                            )
+                        }
                     }
+
                 }
             }
         }
 
+
         //Parte Usuario Registrado
         "ventanaUsuario" -> {
-            MaterialTheme{
+            MaterialTheme {
                 Box(
                     modifier = Modifier.background(naranja).fillMaxSize()
-                ){
+                ) {
                     Image(
                         painter = painterResource("ventanaInicio.png"),
                         contentDescription = "Ventana de Inicio",
@@ -426,7 +466,7 @@ fun App() {
                         verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.background(Color.White)
-                    ){
+                    ) {
                         Text("Bienvenido $user")
                     }
                     Column(
@@ -434,12 +474,12 @@ fun App() {
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Row{
+                        Row {
                             Image(
                                 painter = painterResource("botonCartelera.png"),
                                 contentDescription = "Boton para acceder a la cartelera",
                                 modifier = Modifier
-                                    .clickable(onClick = {ventanaActiva = "ventanaCarteleraCompra"})
+                                    .clickable(onClick = { ventanaActiva = "ventanaCarteleraCompra" })
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -453,9 +493,11 @@ fun App() {
                                 painter = painterResource("botonCerrarSesion.png"),
                                 contentDescription = "Boton para cerrar sesion",
                                 modifier = Modifier
-                                    .clickable(onClick = {ventanaActiva = "ventanaInicio"
+                                    .clickable(onClick = {
+                                        ventanaActiva = "ventanaInicio"
                                         user = ""
-                                        password = ""})
+                                        password = ""
+                                    })
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -467,129 +509,129 @@ fun App() {
         }
 
         "ventanaVacia" -> {
-            MaterialTheme{
+            MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
-                ){
+                ) {
 
                 }
             }
         }
 
-       /*TODO*/"ventanaCarteleraCompra" -> {
-            MaterialTheme{
-                Box(
-                    modifier = Modifier.fillMaxSize().background(naranja)
-                ){
-                    Image(
-                        painter = painterResource("ventanaCartelera.png"),
-                        contentDescription = "Ventana de Cartelera",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                    IconButton(onClick = {ventanaActiva = "ventanaUsuario"}) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Row {
-                            val id = 1
-                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
-                            val statement = conexion.createStatement()
-                            val resultSet = statement.executeQuery(sql)
-                            var aux = ""
-                            while (resultSet.next()) {
-                                val portadaUrl = resultSet.getString("PORTADA_URL")
-                                aux = portadaUrl
-                            }
+        /*TODO*/"ventanaCarteleraCompra" -> {
+        MaterialTheme {
+            Box(
+                modifier = Modifier.fillMaxSize().background(naranja)
+            ) {
+                Image(
+                    painter = painterResource("ventanaCartelera.png"),
+                    contentDescription = "Ventana de Cartelera",
+                    modifier = Modifier.fillMaxSize()
+                )
+                IconButton(onClick = { ventanaActiva = "ventanaUsuario" }) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Row {
+                        val id = 1
+                        val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                        val statement = conexion.createStatement()
+                        val resultSet = statement.executeQuery(sql)
+                        var aux = ""
+                        while (resultSet.next()) {
+                            val portadaUrl = resultSet.getString("PORTADA_URL")
+                            aux = portadaUrl
+                        }
 
-                            Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 1",
-                                modifier = Modifier
-                                    .clickable {
-                                        ventanaActiva = "ventanaVacia"
-                                        val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
-                                        val statement = conexion.createStatement()
-                                        val resultSet = statement.executeQuery(sql)
-                                        var aux = ""
-                                        while (resultSet.next()) {
-                                            val portadaUrl = resultSet.getString("TITULO")
-                                            aux = portadaUrl
-                                        }
-                                        peliActiva = aux
-
+                        Image(
+                            painter = painterResource(aux),
+                            contentDescription = "Portada 1",
+                            modifier = Modifier
+                                .clickable {
+                                    ventanaActiva = "ventanaVacia"
+                                    val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                                    val statement = conexion.createStatement()
+                                    val resultSet = statement.executeQuery(sql)
+                                    var aux = ""
+                                    while (resultSet.next()) {
+                                        val portadaUrl = resultSet.getString("TITULO")
+                                        aux = portadaUrl
                                     }
-                                    .size(150.dp)
-                            )
+                                    peliActiva = aux
+
+                                }
+                                .size(150.dp)
+                        )
 
 
-                            Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 2",
-                                modifier = Modifier
-                                    .clickable {}
-                                    .size(150.dp)
-                            )
+                        Image(
+                            painter = painterResource(aux),
+                            contentDescription = "Portada 2",
+                            modifier = Modifier
+                                .clickable {}
+                                .size(150.dp)
+                        )
 
-                            Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 3",
-                                modifier = Modifier
-                                    .clickable {}
-                                    .size(150.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.padding(50.dp))
-                        Row {
-                            val id = 1
-                            val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
-                            val statement = conexion.createStatement()
-                            val resultSet = statement.executeQuery(sql)
-                            var aux = ""
-                            while (resultSet.next()) {
-                                val portadaUrl = resultSet.getString("PORTADA_URL")
-                                aux = portadaUrl
-                            }
-
-                            Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 1",
-                                modifier = Modifier
-                                    .clickable {}
-                                    .size(150.dp)
-                            )
-
-                            Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 1",
-                                modifier = Modifier
-                                    .clickable {}
-                                    .size(150.dp)
-                            )
-
-                            Image(
-                                painter = painterResource(aux),
-                                contentDescription = "Portada 1",
-                                modifier = Modifier
-                                    .clickable {}
-                                    .size(150.dp)
-                            )
-                        }
-
+                        Image(
+                            painter = painterResource(aux),
+                            contentDescription = "Portada 3",
+                            modifier = Modifier
+                                .clickable {}
+                                .size(150.dp)
+                        )
                     }
+                    Spacer(modifier = Modifier.padding(50.dp))
+                    Row {
+                        val id = 1
+                        val sql = "SELECT PORTADA_URL FROM PELICULAS WHERE ID = '$id'"
+                        val statement = conexion.createStatement()
+                        val resultSet = statement.executeQuery(sql)
+                        var aux = ""
+                        while (resultSet.next()) {
+                            val portadaUrl = resultSet.getString("PORTADA_URL")
+                            aux = portadaUrl
+                        }
+
+                        Image(
+                            painter = painterResource(aux),
+                            contentDescription = "Portada 1",
+                            modifier = Modifier
+                                .clickable {}
+                                .size(150.dp)
+                        )
+
+                        Image(
+                            painter = painterResource(aux),
+                            contentDescription = "Portada 1",
+                            modifier = Modifier
+                                .clickable {}
+                                .size(150.dp)
+                        )
+
+                        Image(
+                            painter = painterResource(aux),
+                            contentDescription = "Portada 1",
+                            modifier = Modifier
+                                .clickable {}
+                                .size(150.dp)
+                        )
+                    }
+
                 }
             }
         }
+    }
 
         //Parte Administrativa
         "ventanaAdmin" -> {
-            MaterialTheme{
+            MaterialTheme {
                 Box(
                     modifier = Modifier.background(naranja)
-                ){
+                ) {
                     Image(
                         painter = painterResource("ventanaAdmin.png"),
                         contentDescription = "Ventana Administracion",
@@ -604,7 +646,8 @@ fun App() {
                             painter = painterResource("botonEliminarUsuario.png"),
                             contentDescription = "Boton para elimniar un usuario",
                             modifier = Modifier
-                                .clickable {ventanaActiva = "ventanaEliminarUsuario"
+                                .clickable {
+                                    ventanaActiva = "ventanaEliminarUsuario"
                                 }
                                 .width(150.dp)
                                 .height(50.dp)
@@ -618,9 +661,11 @@ fun App() {
                             painter = painterResource("botonCerrarSesion.png"),
                             contentDescription = "Boton para cerrar sesion",
                             modifier = Modifier
-                                .clickable(onClick = {ventanaActiva = "ventanaInicio"
+                                .clickable(onClick = {
+                                    ventanaActiva = "ventanaInicio"
                                     user = ""
-                                    password = ""})
+                                    password = ""
+                                })
                                 .width(150.dp)
                                 .height(50.dp)
                         )
@@ -633,9 +678,11 @@ fun App() {
                             painter = painterResource("boton_registrarse.png"),
                             contentDescription = "Boton para registrar nuevo admin",
                             modifier = Modifier
-                                .clickable(onClick = {ventanaActiva = "ventanaAñadirAdmin"
+                                .clickable(onClick = {
+                                    ventanaActiva = "ventanaAñadirAdmin"
                                     user = ""
-                                    password = ""})
+                                    password = ""
+                                })
                                 .width(150.dp)
                                 .height(50.dp)
                         )
@@ -647,9 +694,11 @@ fun App() {
                             painter = painterResource("botonAñadirPelicula.png"),
                             contentDescription = "Boton para registrar nuevo admin",
                             modifier = Modifier
-                                .clickable(onClick = {ventanaActiva = "ventanaAñadirPelícula"
+                                .clickable(onClick = {
+                                    ventanaActiva = "ventanaAñadirPelícula"
                                     user = ""
-                                    password = ""})
+                                    password = ""
+                                })
                                 .width(150.dp)
                                 .height(50.dp)
                         )
@@ -661,9 +710,11 @@ fun App() {
                             painter = painterResource("botonGestionarCartelera.png"),
                             contentDescription = "Boton para modificar la cartelera",
                             modifier = Modifier
-                                .clickable(onClick = {ventanaActiva = "ventanaGestionarCartelera"
+                                .clickable(onClick = {
+                                    ventanaActiva = "ventanaGestionarCartelera"
                                     user = ""
-                                    password = ""})
+                                    password = ""
+                                })
                                 .width(150.dp)
                                 .height(50.dp)
                         )
@@ -673,12 +724,12 @@ fun App() {
         }
 
         "ventanaEliminarUsuario" -> {
-            var eliminarUsuario by remember {mutableStateOf("") }
-            MaterialTheme{
+            var eliminarUsuario by remember { mutableStateOf("") }
+            MaterialTheme {
                 Box(
                     modifier = Modifier.background(naranja)
-                ){
-                    IconButton(onClick = {ventanaActiva = "ventanaAdmin"}) {
+                ) {
+                    IconButton(onClick = { ventanaActiva = "ventanaAdmin" }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -697,7 +748,8 @@ fun App() {
                             contentDescription = "Boton para elimniar un usuario",
                             modifier = Modifier
                                 .clickable {
-                                    val comandoComprobar = "SELECT USUARIO FROM USUARIOS WHERE USUARIO = '$eliminarUsuario'"
+                                    val comandoComprobar =
+                                        "SELECT USUARIO FROM USUARIOS WHERE USUARIO = '$eliminarUsuario'"
                                     val statement1 = conexion.createStatement()
                                     val resultSet1 = statement1.executeQuery(comandoComprobar)
                                     var aux = ""
@@ -714,8 +766,7 @@ fun App() {
                                             executeUpdate()
                                             println("Usuario $eliminarUsuario eliminado")
                                         }
-                                    }
-                                    else println("Usuario $eliminarUsuario no existe")
+                                    } else println("Usuario $eliminarUsuario no existe")
                                 }
                                 .width(150.dp)
                                 .height(50.dp)
@@ -735,7 +786,7 @@ fun App() {
                         contentDescription = "Ventana de Inicio",
                         modifier = Modifier.fillMaxSize()
                     )
-                    IconButton(onClick = {ventanaActiva = "ventanaAdmin"}) {
+                    IconButton(onClick = { ventanaActiva = "ventanaAdmin" }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -745,7 +796,7 @@ fun App() {
                     ) {
                         Row(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
                             TextField(
                                 value = user,
                                 onValueChange = { user = it },
@@ -755,7 +806,7 @@ fun App() {
                         Spacer(modifier = Modifier.padding(10.dp))
                         Row(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
@@ -772,7 +823,8 @@ fun App() {
                                 contentDescription = "Boton Registrarse",
                                 modifier = Modifier
                                     .clickable {
-                                        val comando = conexion.prepareStatement("INSERT INTO ADMIN (Usuario , Contraseña) VALUES (?, ?)")
+                                        val comando =
+                                            conexion.prepareStatement("INSERT INTO ADMIN (Usuario , Contraseña) VALUES (?, ?)")
                                         comando.run {
                                             setString(1, user)
                                             setString(2, password)
@@ -789,8 +841,10 @@ fun App() {
                                 painter = painterResource("botonLimpiar.png"),
                                 contentDescription = "Boton Limpiear Celdas",
                                 modifier = Modifier
-                                    .clickable { user = ""
-                                        password = ""}
+                                    .clickable {
+                                        user = ""
+                                        password = ""
+                                    }
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -801,13 +855,13 @@ fun App() {
         }
 
         "ventanaAñadirPelícula" -> {
-            var titulo by remember {mutableStateOf("") }
-            var duracion by remember {mutableStateOf("") }
-            var genero by remember {mutableStateOf("") }
-            var anio by remember {mutableStateOf("") }
-            var portada by remember {mutableStateOf("") }
+            var titulo by remember { mutableStateOf("") }
+            var duracion by remember { mutableStateOf("") }
+            var genero by remember { mutableStateOf("") }
+            var anio by remember { mutableStateOf("") }
+            var portada by remember { mutableStateOf("") }
             val ruta = "Películas\\"
-            MaterialTheme{
+            MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
                 ) {
@@ -816,7 +870,7 @@ fun App() {
                         contentDescription = "Ventana de Inicio",
                         modifier = Modifier.fillMaxSize()
                     )
-                    IconButton(onClick = {ventanaActiva = "ventanaAdmin"}) {
+                    IconButton(onClick = { ventanaActiva = "ventanaAdmin" }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -826,7 +880,7 @@ fun App() {
                     ) {
                         Column(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
                             TextField(
                                 value = titulo,
                                 onValueChange = { titulo = it },
@@ -865,7 +919,8 @@ fun App() {
                                     .clickable {
                                         portada = ruta + portada
 
-                                        val comando = conexion.prepareStatement("INSERT INTO PELICULAS (Titulo, Duracion, Genero, Año, Portada) VALUES (?, ?, ?, ?, ?)")
+                                        val comando =
+                                            conexion.prepareStatement("INSERT INTO PELICULAS (Titulo, Duracion, Genero, Año, Portada) VALUES (?, ?, ?, ?, ?)")
                                         comando.run {
                                             setString(1, titulo)
                                             setInt(2, duracion.toInt())
@@ -885,11 +940,13 @@ fun App() {
                                 painter = painterResource("botonLimpiar.png"),
                                 contentDescription = "Boton Limpiear Celdas",
                                 modifier = Modifier
-                                    .clickable { titulo = ""
-                                                 genero = ""
-                                                 duracion = ""
-                                                 portada = ""
-                                                 anio = ""}
+                                    .clickable {
+                                        titulo = ""
+                                        genero = ""
+                                        duracion = ""
+                                        portada = ""
+                                        anio = ""
+                                    }
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -900,104 +957,139 @@ fun App() {
         }
 
         "ventanaGestionarCartelera" -> {
-            var Pelicula1 by remember {mutableStateOf("") }
-            var Pelicula2 by remember {mutableStateOf("") }
-            var Pelicula3 by remember {mutableStateOf("") }
-            var Pelicula4 by remember {mutableStateOf("") }
-            var Pelicula5 by remember {mutableStateOf("") }
-            var Pelicula6 by remember {mutableStateOf("") }
-            var posicionCartelera by remember {mutableStateOf(1) }
-
-            val sql = "SELECT TITULO, POSICIONCARTELERA FROM PELICULAS WHERE posicionCartelera IS NOT NULL"
-            val statement = conexion.createStatement()
-            val resultSet = statement.executeQuery(sql)
-            var portada = ""
-            while (resultSet.next()) {
-                portada = resultSet.getString("TITULO")
-            }
-
-            MaterialTheme{
+            MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
-                ){
+                ) {
+                    Image(
+                        painter = painterResource("ventanaCartelera.png"),
+                        contentDescription = "Ventana de Cartelera",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    IconButton(onClick = { ventanaActiva = "ventanaInicio" }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Column(
-                            modifier = Modifier.background(Color.White)
-                        ) {
-
-                            TextField(
-                                value = Pelicula1,
-                                onValueChange = { Pelicula1 = it },
-                                label = { Text("Pelicula 1") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "SELECT TITULO FROM PELICULAS WHERE posicionCartelera = 1"
-                                    val statement = conexion.createStatement()
-                                    val resultSet = statement.executeQuery(sql)
-                                    var portada = ""
-                                    while (resultSet.next()) {
-                                        portada = resultSet.getString("TITULO")
-                                    }
-                                    Pelicula1 = portada
-                                }
-                            )
-                            posicionCartelera = 2
-                            TextField(
-                                value = Pelicula2,
-                                onValueChange = { Pelicula2 = it },
-                                label = { Text("Pelicula 2") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "SELECT TITULO FROM PELICULAS WHERE posicionCartelera = 2"
-                                    val statement = conexion.createStatement()
-                                    val resultSet = statement.executeQuery(sql)
-                                    var portada = ""
-                                    while (resultSet.next()) {
-                                        portada = resultSet.getString("TITULO")
-                                    }
-                                    Pelicula1 = portada
-                                }
-                            )
-                            TextField(
-                                value = Pelicula3,
-                                onValueChange = { Pelicula3 = it },
-                                label = { Text("Pelicula 3") }
-                            )
-                            TextField(
-                                value = Pelicula4,
-                                onValueChange = { Pelicula4 = it },
-                                label = { Text("Pelicula 4") }
-                            )
-                            TextField(
-                                value = Pelicula5,
-                                onValueChange = { Pelicula5 = it },
-                                label = { Text("Pelicula 5") }
-                            )
-                            TextField(
-                                value = Pelicula6,
-                                onValueChange = { Pelicula6 = it },
-                                label = { Text("Pelicula 6") }
-                            )
-                            Spacer(modifier = Modifier.padding(10.dp))
+                        var posicionCartelera = 1
+                        var sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        var statement = conexion.createStatement()
+                        var resultSet = statement.executeQuery(sql)
+                        var portada1 = ""
+                        while (resultSet.next()) {
+                            portada1 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 2
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada2 = ""
+                        while (resultSet.next()) {
+                            portada2 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 3
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada3 = ""
+                        while (resultSet.next()) {
+                            portada3 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 4
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada4 = ""
+                        while (resultSet.next()) {
+                            portada4 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 5
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada5 = ""
+                        while (resultSet.next()) {
+                            portada5 = resultSet.getString("PORTADA")
+                        }
+                        posicionCartelera = 6
+                        sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
+                        statement = conexion.createStatement()
+                        resultSet = statement.executeQuery(sql)
+                        var portada6 = ""
+                        while (resultSet.next()) {
+                            portada6 = resultSet.getString("PORTADA")
+                        }
+                        Row {
                             Image(
-                                painter = painterResource("botonActualizarCartelera.png"),
-                                contentDescription = "Boton para actualizar cartelera",
+                                painter = painterResource(portada1),
+                                contentDescription = "Portada 1",
                                 modifier = Modifier
+                                    .size(150.dp)
                                     .clickable {
 
-                                        ventanaActiva = "ventanaAdmin"
                                     }
-                                    .width(150.dp)
-                                    .height(50.dp)
+                            )
+
+
+                            Image(
+                                painter = painterResource(portada2),
+                                contentDescription = "Portada 2",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clickable {
+
+                                    }
+                            )
+
+                            Image(
+                                painter = painterResource(portada3),
+                                contentDescription = "Portada 3",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clickable {
+
+                                    }
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(15.dp))
+                        Row {
+                            Image(
+                                painter = painterResource(portada4),
+                                contentDescription = "Portada 4",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clickable {
+
+                                    }
+                            )
+
+                            Image(
+                                painter = painterResource(portada5),
+                                contentDescription = "Portada 5",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clickable {
+
+                                    }
+                            )
+
+                            Image(
+                                painter = painterResource(portada6),
+                                contentDescription = "Portada 6",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clickable {
+
+                                    }
                             )
                         }
                     }
                 }
             }
         }
-
     }
 }
 
