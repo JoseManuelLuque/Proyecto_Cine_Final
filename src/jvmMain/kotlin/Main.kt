@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,18 +29,23 @@ fun main() = application {
 @Composable
 @Preview
 fun App() {
+    //Credenciales para la conexion con la Base de Daros
     val url = "jdbc:mysql://localhost:3306/PROGRAMACION"
     val usuario = "root"
     val contrasenia = "Alberti956"
+
+    //Colores Usados
     val naranja = Color.hsv(25.0.toFloat(), 1.0.toFloat(), 1.0.toFloat())
+
+    //Resto de Variables
     var ventanaActiva by remember {mutableStateOf("ventanaInicio") }
     var user by remember {mutableStateOf("") }
     var password by remember {mutableStateOf("") }
     var peliActiva by remember {mutableStateOf("") }
 
+    //Conexion con Base de datos
     Class.forName("com.mysql.cj.jdbc.Driver")
     val conexion = DriverManager.getConnection(url, usuario, contrasenia)
-
 
     when (ventanaActiva) {
         //Parte Usuario SIN REGISTRAR
@@ -330,8 +336,8 @@ fun App() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Row {
-                            var titulo = "Super Mario Bros: La Película"
-                            val sql = "SELECT PORTADA FROM PELICULAS WHERE titulo = '$titulo'"
+                            var posicionCartelera = 3
+                            val sql = "SELECT PORTADA FROM PELICULAS WHERE POSICIONCARTELERA = '$posicionCartelera'"
                             val statement = conexion.createStatement()
                             val resultSet = statement.executeQuery(sql)
                             var portada = ""
@@ -605,7 +611,7 @@ fun App() {
                         )
                         Spacer(
                             modifier = Modifier
-                                .padding(35.dp)
+                                .padding(20.dp)
                         )
 
                         Image(
@@ -620,7 +626,7 @@ fun App() {
                         )
                         Spacer(
                             modifier = Modifier
-                                .padding(35.dp)
+                                .padding(20.dp)
                         )
 
                         Image(
@@ -635,13 +641,27 @@ fun App() {
                         )
                         Spacer(
                             modifier = Modifier
-                                .padding(35.dp)
+                                .padding(20.dp)
                         )
                         Image(
                             painter = painterResource("botonAñadirPelicula.png"),
                             contentDescription = "Boton para registrar nuevo admin",
                             modifier = Modifier
                                 .clickable(onClick = {ventanaActiva = "ventanaAñadirPelícula"
+                                    user = ""
+                                    password = ""})
+                                .width(150.dp)
+                                .height(50.dp)
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .padding(20.dp)
+                        )
+                        Image(
+                            painter = painterResource("botonGestionarCartelera.png"),
+                            contentDescription = "Boton para modificar la cartelera",
+                            modifier = Modifier
+                                .clickable(onClick = {ventanaActiva = "ventanaGestionarCartelera"
                                     user = ""
                                     password = ""})
                                 .width(150.dp)
@@ -877,7 +897,106 @@ fun App() {
                     }
                 }
             }
-        } /*TODO*/
+        }
+
+        "ventanaGestionarCartelera" -> {
+            var Pelicula1 by remember {mutableStateOf("") }
+            var Pelicula2 by remember {mutableStateOf("") }
+            var Pelicula3 by remember {mutableStateOf("") }
+            var Pelicula4 by remember {mutableStateOf("") }
+            var Pelicula5 by remember {mutableStateOf("") }
+            var Pelicula6 by remember {mutableStateOf("") }
+            var posicionCartelera by remember {mutableStateOf(1) }
+
+            val sql = "SELECT TITULO, POSICIONCARTELERA FROM PELICULAS WHERE posicionCartelera IS NOT NULL"
+            val statement = conexion.createStatement()
+            val resultSet = statement.executeQuery(sql)
+            var portada = ""
+            while (resultSet.next()) {
+                portada = resultSet.getString("TITULO")
+            }
+
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            modifier = Modifier.background(Color.White)
+                        ) {
+
+                            TextField(
+                                value = Pelicula1,
+                                onValueChange = { Pelicula1 = it },
+                                label = { Text("Pelicula 1") },
+                                modifier = Modifier.onFocusChanged {
+                                    val sql = "SELECT TITULO FROM PELICULAS WHERE posicionCartelera = 1"
+                                    val statement = conexion.createStatement()
+                                    val resultSet = statement.executeQuery(sql)
+                                    var portada = ""
+                                    while (resultSet.next()) {
+                                        portada = resultSet.getString("TITULO")
+                                    }
+                                    Pelicula1 = portada
+                                }
+                            )
+                            posicionCartelera = 2
+                            TextField(
+                                value = Pelicula2,
+                                onValueChange = { Pelicula2 = it },
+                                label = { Text("Pelicula 2") },
+                                modifier = Modifier.onFocusChanged {
+                                    val sql = "SELECT TITULO FROM PELICULAS WHERE posicionCartelera = 2"
+                                    val statement = conexion.createStatement()
+                                    val resultSet = statement.executeQuery(sql)
+                                    var portada = ""
+                                    while (resultSet.next()) {
+                                        portada = resultSet.getString("TITULO")
+                                    }
+                                    Pelicula1 = portada
+                                }
+                            )
+                            TextField(
+                                value = Pelicula3,
+                                onValueChange = { Pelicula3 = it },
+                                label = { Text("Pelicula 3") }
+                            )
+                            TextField(
+                                value = Pelicula4,
+                                onValueChange = { Pelicula4 = it },
+                                label = { Text("Pelicula 4") }
+                            )
+                            TextField(
+                                value = Pelicula5,
+                                onValueChange = { Pelicula5 = it },
+                                label = { Text("Pelicula 5") }
+                            )
+                            TextField(
+                                value = Pelicula6,
+                                onValueChange = { Pelicula6 = it },
+                                label = { Text("Pelicula 6") }
+                            )
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            Image(
+                                painter = painterResource("botonActualizarCartelera.png"),
+                                contentDescription = "Boton para actualizar cartelera",
+                                modifier = Modifier
+                                    .clickable {
+
+                                        ventanaActiva = "ventanaAdmin"
+                                    }
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
 
     }
 }
