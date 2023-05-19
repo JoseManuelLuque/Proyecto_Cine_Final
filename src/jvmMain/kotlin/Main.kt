@@ -261,10 +261,10 @@ fun App() {
 
                                         while (resultSet.next()){
                                             val checkUser = resultSet.getString("Usuario")
-
                                             if (checkUser == user){
                                                 userEcontrado = true
                                             }
+                                            else userEcontrado = false
                                         }
                                         while (resultSet1.next()){
                                             val checkPass = resultSet1.getString("Contraseña")
@@ -272,12 +272,14 @@ fun App() {
                                             if (checkPass == password){
                                                 passwordEncontrado = true
                                             }
+                                            else passwordEncontrado = false
                                         }
 
                                         if (userEcontrado && passwordEncontrado){
                                             println("Inicio de sesión completado")
                                             ventanaActiva = "ventanaUsuario"
                                         }
+                                        else println("Usuario no encontrando")
 
                                         while (resultUserAdmin.next()){
                                             val checkUserAdmin = resultUserAdmin.getString("Usuario")
@@ -285,6 +287,7 @@ fun App() {
                                             if (checkUserAdmin == user){
                                                 userAdmin = true
                                             }
+                                            else userAdmin = false
                                         }
                                         while (resultPassAdmin.next()){
                                             val checkPassAdmin = resultPassAdmin.getString("Contraseña")
@@ -292,12 +295,14 @@ fun App() {
                                             if (checkPassAdmin == password){
                                                 passwordAdmin = true
                                             }
+                                            else passwordAdmin = false
                                         }
 
                                         if (userAdmin && passwordAdmin){
                                             println("Bienvenido Admin $user")
                                             ventanaActiva = "ventanaAdmin"
                                         }
+                                        else println("Inicio de sesion Fallido")
                                     })
                                     .width(150.dp)
                                     .height(50.dp)
@@ -496,12 +501,33 @@ fun App() {
             }
         }
 
-        "ventanaVacia" -> {
+        "ventanaCompra" -> {
             MaterialTheme{
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
                 ){
-
+                    var sql = "SELECT PORTADA, TITULO FROM PELICULAS WHERE POSICIONCARTELERA = '$peliActiva'"
+                    var statement = conexion.createStatement()
+                    var resultSet = statement.executeQuery(sql)
+                    var titulo = ""
+                    var portada = ""
+                    while (resultSet.next()) {
+                        titulo = resultSet.getString("TITULO")
+                        portada = resultSet.getString("PORTADA")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ){
+                        Text(titulo, fontSize = 40.sp)
+                        Spacer(modifier = Modifier.padding(10.dp))
+                        Image(
+                            painter = painterResource(portada),
+                            contentDescription = "Portada de pelicula a comprar",
+                            modifier = Modifier.size(150.dp)
+                        )
+                    }
                 }
             }
         }
@@ -578,6 +604,12 @@ fun App() {
                                 contentDescription = "Portada 1",
                                 modifier = Modifier
                                     .size(150.dp)
+                                    .clickable {
+                                        peliActiva = "1"
+
+
+                                        ventanaActiva = "ventanaCompra"
+                                    }
                             )
 
 
@@ -586,6 +618,10 @@ fun App() {
                                 contentDescription = "Portada 2",
                                 modifier = Modifier
                                     .size(150.dp)
+                                    .clickable {
+                                        peliActiva = "2"
+
+                                    }
                             )
 
                             Image(
@@ -593,6 +629,10 @@ fun App() {
                                 contentDescription = "Portada 3",
                                 modifier = Modifier
                                     .size(150.dp)
+                                    .clickable {
+                                        peliActiva = "3"
+
+                                    }
                             )
                         }
                         Spacer(modifier = Modifier.padding(15.dp))
@@ -602,6 +642,10 @@ fun App() {
                                 contentDescription = "Portada 4",
                                 modifier = Modifier
                                     .size(150.dp)
+                                    .clickable {
+                                        peliActiva = "4"
+
+                                    }
                             )
 
                             Image(
@@ -609,6 +653,10 @@ fun App() {
                                 contentDescription = "Portada 5",
                                 modifier = Modifier
                                     .size(150.dp)
+                                    .clickable {
+                                        peliActiva = "5"
+
+                                    }
                             )
 
                             Image(
@@ -616,6 +664,10 @@ fun App() {
                                 contentDescription = "Portada 6",
                                 modifier = Modifier
                                     .size(150.dp)
+                                    .clickable {
+                                        peliActiva = "6"
+
+                                    }
                             )
                         }
                     }
@@ -1044,7 +1096,6 @@ fun App() {
                 }
             }
         }
-
     }
 }
 
