@@ -1,6 +1,7 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.onDrag
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -10,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -941,25 +941,24 @@ fun App() {
         }
 
         "ventanaGestionarCartelera" -> {
-            var Pelicula1 by remember {mutableStateOf("") }
-            var Pelicula2 by remember {mutableStateOf("") }
-            var Pelicula3 by remember {mutableStateOf("") }
-            var Pelicula4 by remember {mutableStateOf("") }
-            var Pelicula5 by remember {mutableStateOf("") }
-            var Pelicula6 by remember {mutableStateOf("") }
-            var posicionCartelera by remember {mutableStateOf(1) }
+            var pelicula1 by remember {mutableStateOf("") }
+            var pelicula2 by remember {mutableStateOf("") }
+            var pelicula3 by remember {mutableStateOf("") }
+            var pelicula4 by remember {mutableStateOf("") }
+            var pelicula5 by remember {mutableStateOf("") }
+            var pelicula6 by remember {mutableStateOf("") }
 
             val sql = "SELECT TITULO, POSICIONCARTELERA FROM PELICULAS WHERE posicionCartelera IS NOT NULL"
             val statement = conexion.createStatement()
             val resultSet = statement.executeQuery(sql)
             while (resultSet.next()) {
                 when (resultSet.getInt("POSICIONCARTELERA")) {
-                    1 -> Pelicula1 = resultSet.getString("TITULO")
-                    2 -> Pelicula2 = resultSet.getString("TITULO")
-                    3 -> Pelicula3 = resultSet.getString("TITULO")
-                    4 -> Pelicula4 = resultSet.getString("TITULO")
-                    5 -> Pelicula5 = resultSet.getString("TITULO")
-                    6 -> Pelicula6 =resultSet.getString("TITULO")
+                    1 -> pelicula1 = resultSet.getString("TITULO")
+                    2 -> pelicula2 = resultSet.getString("TITULO")
+                    3 -> pelicula3 = resultSet.getString("TITULO")
+                    4 -> pelicula4 = resultSet.getString("TITULO")
+                    5 -> pelicula5 = resultSet.getString("TITULO")
+                    6 -> pelicula6 = resultSet.getString("TITULO")
                 }
             }
 
@@ -980,70 +979,34 @@ fun App() {
                         ) {
 
                             TextField(
-                                value = Pelicula1,
-                                onValueChange = { Pelicula1 = it },
-                                label = { Text("Pelicula 1") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "UPDATE PELICULAS SET PosicionCartelera = NULL WHERE (`Titulo` = '$Pelicula1')"
-                                    val statement = conexion.createStatement()
-                                    statement.execute(sql)
-
-                                }
+                                value = pelicula1,
+                                onValueChange = { pelicula1 = it },
+                                label = { Text("Pelicula 1") }
                             )
                             TextField(
-                                value = Pelicula2,
-                                onValueChange = { Pelicula2 = it },
-                                label = { Text("Pelicula 2") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "UPDATE PELICULAS SET PosicionCartelera = NULL WHERE (`Titulo` = '$Pelicula2')"
-                                    val statement = conexion.createStatement()
-                                    statement.execute(sql)
-
-                                }
+                                value = pelicula2,
+                                onValueChange = { pelicula2 = it },
+                                label = { Text("Pelicula 2") }
                             )
                             TextField(
-                                value = Pelicula3,
-                                onValueChange = { Pelicula3 = it },
-                                label = { Text("Pelicula 3") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "UPDATE PELICULAS SET PosicionCartelera = NULL WHERE (`Titulo` = '$Pelicula3')"
-                                    val statement = conexion.createStatement()
-                                    statement.execute(sql)
-
-                                }
+                                value = pelicula3,
+                                onValueChange = { pelicula3 = it },
+                                label = { Text("Pelicula 3") }
                             )
                             TextField(
-                                value = Pelicula4,
-                                onValueChange = { Pelicula4 = it },
-                                label = { Text("Pelicula 4") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "UPDATE PELICULAS SET PosicionCartelera = NULL WHERE (`Titulo` = '$Pelicula4')"
-                                    val statement = conexion.createStatement()
-                                    statement.execute(sql)
-
-                                }
+                                value = pelicula4,
+                                onValueChange = { pelicula4 = it },
+                                label = { Text("Pelicula 4") }
                             )
                             TextField(
-                                value = Pelicula5,
-                                onValueChange = { Pelicula5 = it },
-                                label = { Text("Pelicula 5") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "UPDATE PELICULAS SET PosicionCartelera = NULL WHERE (`Titulo` = '$Pelicula5')"
-                                    val statement = conexion.createStatement()
-                                    statement.execute(sql)
-
-                                }
+                                value = pelicula5,
+                                onValueChange = { pelicula5 = it },
+                                label = { Text("Pelicula 5") }
                             )
                             TextField(
-                                value = Pelicula6,
-                                onValueChange = { Pelicula6 = it },
-                                label = { Text("Pelicula 6") },
-                                modifier = Modifier.onFocusChanged {
-                                    val sql = "UPDATE PELICULAS SET PosicionCartelera = NULL WHERE (`Titulo` = '$Pelicula6')"
-                                    val statement = conexion.createStatement()
-                                    statement.execute(sql)
-
-                                }
+                                value = pelicula6,
+                                onValueChange = { pelicula6 = it },
+                                label = { Text("Pelicula 6") }
                             )
                         }
                         Row{
@@ -1052,12 +1015,17 @@ fun App() {
                                 contentDescription = "Boton para actualizar cartelera",
                                 modifier = Modifier
                                     .clickable {
-                                        val sql1 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$Pelicula1'"
-                                        val sql2 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$Pelicula2'"
-                                        val sql3 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$Pelicula3'"
-                                        val sql4 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$Pelicula4'"
-                                        val sql5 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$Pelicula5'"
-                                        val sql6 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$Pelicula6'"
+                                        val sql = "UPDATE PELICULAS SET PosicionCartelera = NULL"
+                                        val statement1 = conexion.createStatement()
+                                        statement1.execute(sql)
+
+
+                                        val sql1 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$pelicula1'"
+                                        val sql2 = "UPDATE PELICULAS SET PosicionCartelera = 2 WHERE Titulo = '$pelicula2'"
+                                        val sql3 = "UPDATE PELICULAS SET PosicionCartelera = 3 WHERE Titulo = '$pelicula3'"
+                                        val sql4 = "UPDATE PELICULAS SET PosicionCartelera = 4 WHERE Titulo = '$pelicula4'"
+                                        val sql5 = "UPDATE PELICULAS SET PosicionCartelera = 5 WHERE Titulo = '$pelicula5'"
+                                        val sql6 = "UPDATE PELICULAS SET PosicionCartelera = 6 WHERE Titulo = '$pelicula6'"
                                         val statement = conexion.createStatement()
                                         statement.execute(sql1)
                                         statement.execute(sql2)
@@ -1088,14 +1056,12 @@ fun generarEntrada (usuario: Usuario): String{
     val conexion = DriverManager.getConnection(url, usuario, contrasenia)
 
     var codigoEntrada = ""
-    var contador = 0
 
     for (i in 1..12){
         val letraMay = (65..90).random()
         val letraMin = (97..122).random()
         val numero = (48..57).random()
-        contador = (1..3).random()
-        when (contador){
+        when ((1..3).random()){
             1 -> { codigoEntrada += letraMay.toChar() }
             2 -> { codigoEntrada += letraMin.toChar() }
             3 -> { codigoEntrada += numero.toChar() }
