@@ -35,7 +35,7 @@ CREATE TABLE `admin` (
 
 LOCK TABLES `admin` WRITE;
 /*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-INSERT INTO `admin` VALUES ('',''),('Josema','Josema'),('Josema2','Josema2'),('Paco','XD');
+INSERT INTO `admin` VALUES ('Josema','Josema'),('Nerea','Nerea');
 /*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,11 +73,14 @@ DROP TABLE IF EXISTS `entradas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `entradas` (
-  `Codigo` decimal(2,0) NOT NULL,
+  `Codigo` varchar(12) NOT NULL,
   `Usuario` varchar(9) DEFAULT NULL,
+  `Pelicula` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Codigo`),
   KEY `Usuario` (`Usuario`),
-  CONSTRAINT `entradas_ibfk_1` FOREIGN KEY (`Usuario`) REFERENCES `usuarios` (`Usuario`)
+  KEY `Pelicula` (`Pelicula`),
+  CONSTRAINT `entradas_ibfk_1` FOREIGN KEY (`Usuario`) REFERENCES `usuarios` (`Usuario`),
+  CONSTRAINT `entradas_ibfk_2` FOREIGN KEY (`Pelicula`) REFERENCES `peliculas` (`Titulo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -87,6 +90,7 @@ CREATE TABLE `entradas` (
 
 LOCK TABLES `entradas` WRITE;
 /*!40000 ALTER TABLE `entradas` DISABLE KEYS */;
+INSERT INTO `entradas` VALUES ('R6J8Tkgyz75W','a','Flash'),('YMYCL07z5zEa','a','Avatar: El sentido del agua'),('YOpmIpnox496','a','Flash');
 /*!40000 ALTER TABLE `entradas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +193,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES ('','wddawd@gmail.com'),('a','a'),('abcd./2','abcd./2'),('paco','PQUI'),('user','password');
+INSERT INTO `usuarios` VALUES ('a','a'),('abcd./2','abcd./2');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -202,4 +206,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-19 11:38:41
+-- Dump completed on 2023-05-21 17:55:22
