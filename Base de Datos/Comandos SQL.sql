@@ -36,22 +36,6 @@ Contraseña varchar(25)
 
 INSERT INTO ADMIN VALUES('Josema', 'Josema');
 
-
---Tabla de Salas
-CREATE TABLE SALAS (
-Numero Numeric(2)PRIMARY KEY,
-Filas Numeric(2),
-Columnas Numeric(2),
-numButacasTotal Numeric(3)
-);
-
---Tabla de Sesiones
-CREATE TABLE SESION (
-Sala Numeric(2),
-Hora VARCHAR(9),
-FOREIGN KEY(Sala) REFERENCES Salas(Numero)
-);
-
 --Tabla de Entradas
 CREATE TABLE ENTRADAS (
 Codigo VARCHAR(12) PRIMARY KEY,

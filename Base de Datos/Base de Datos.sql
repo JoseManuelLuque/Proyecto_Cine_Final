@@ -90,7 +90,7 @@ CREATE TABLE `entradas` (
 
 LOCK TABLES `entradas` WRITE;
 /*!40000 ALTER TABLE `entradas` DISABLE KEYS */;
-INSERT INTO `entradas` VALUES ('R6J8Tkgyz75W','a','Flash'),('YMYCL07z5zEa','a','Avatar: El sentido del agua'),('YOpmIpnox496','a','Flash');
+INSERT INTO `entradas` VALUES ('DPfd2cLB96U9','b','Super Mario Bros: La película'),('duUifYZEJRUG','b','Super Mario Bros: La película'),('R6J8Tkgyz75W','a','Flash'),('YMYCL07z5zEa','a','Avatar: El sentido del agua'),('YOpmIpnox496','a','Flash');
 /*!40000 ALTER TABLE `entradas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -125,55 +125,6 @@ INSERT INTO `peliculas` VALUES ('Avatar: El sentido del agua',192,'Ciencia Ficci
 UNLOCK TABLES;
 
 --
--- Table structure for table `salas`
---
-
-DROP TABLE IF EXISTS `salas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `salas` (
-  `Numero` decimal(2,0) NOT NULL,
-  `Filas` decimal(2,0) DEFAULT NULL,
-  `Columnas` decimal(2,0) DEFAULT NULL,
-  `numButacasTotal` decimal(3,0) DEFAULT NULL,
-  PRIMARY KEY (`Numero`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `salas`
---
-
-LOCK TABLES `salas` WRITE;
-/*!40000 ALTER TABLE `salas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `salas` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sesion`
---
-
-DROP TABLE IF EXISTS `sesion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sesion` (
-  `Sala` decimal(2,0) DEFAULT NULL,
-  `Hora` varchar(9) DEFAULT NULL,
-  KEY `Sala` (`Sala`),
-  CONSTRAINT `sesion_ibfk_1` FOREIGN KEY (`Sala`) REFERENCES `salas` (`Numero`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sesion`
---
-
-LOCK TABLES `sesion` WRITE;
-/*!40000 ALTER TABLE `sesion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sesion` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `usuarios`
 --
 
@@ -193,7 +144,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES ('a','a'),('abcd./2','abcd./2');
+INSERT INTO `usuarios` VALUES ('a','a'),('abcd./2','abcd./2'),('b','b');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -206,4 +157,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-21 17:55:22
+-- Dump completed on 2023-05-21 21:46:33

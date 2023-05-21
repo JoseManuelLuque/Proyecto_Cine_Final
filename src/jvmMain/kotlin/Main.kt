@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -45,6 +46,7 @@ fun App() {
     var user by remember {mutableStateOf("") }
     var password by remember {mutableStateOf("") }
     var peliActiva by remember {mutableStateOf("") }
+    val entradas by remember { mutableStateOf(mutableListOf<Entrada>()) }
 
     //Conexion con Base de datos
     Class.forName("com.mysql.cj.jdbc.Driver")
@@ -478,7 +480,6 @@ fun App() {
                 }
             }
 
-
         //Parte Usuario Registrado
         "ventanaUsuario" -> {
             MaterialTheme{
@@ -524,6 +525,18 @@ fun App() {
                                     .clickable(onClick = {ventanaActiva = "ventanaInicio"
                                         user = ""
                                         password = ""})
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(20.dp)
+                            )
+                            Image(
+                                painter = painterResource("botonComprobar.png"),
+                                contentDescription = "Boton para comprobar tus entradas",
+                                modifier = Modifier
+                                    .clickable(onClick = {ventanaActiva = "ventanaVerEntradas"})
                                     .width(150.dp)
                                     .height(50.dp)
                             )
@@ -741,7 +754,50 @@ fun App() {
         }
 
         "ventanaVerEntradas" -> {
+            val statement = conexion.createStatement()
+            val resultSet = statement.executeQuery("SELECT pelicula, codigo FROM entradas WHERE usuario = '$user'")
+            MaterialTheme {
+                Box(
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ) {
+                    Image(
+                        painter = painterResource("ventanaInicio.png"),
+                        contentDescription = "Ventana de Inicio",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    IconButton(onClick = { ventanaActiva = "ventanaUsuario" }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        while (resultSet.next()) {
+                            val codigo = resultSet.getString("codigo")
+                            val pelicula = resultSet.getString("pelicula")
+                            entradas.add(Entrada(codigo, pelicula))
+                        }
 
+                        Column(
+                            modifier = Modifier.background(Color.White)
+                        ) {
+                            Text("Entradas de $user", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            if (entradas.isEmpty()) {
+                                Text("No se encontraron entradas para este usuario")
+                            } else {
+                                entradas.forEach { entrada ->
+                                    Row{
+                                        Text("Código: ${entrada.codigo} Película: ${entrada.pelicula}", fontSize = 18.sp)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         //Parte Administrativa
@@ -822,6 +878,20 @@ fun App() {
                                 contentDescription = "Boton para modificar la cartelera",
                                 modifier = Modifier
                                     .clickable(onClick = {ventanaActiva = "ventanaGestionarCartelera"
+                                        user = ""
+                                        password = ""})
+                                    .width(150.dp)
+                                    .height(50.dp)
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .padding(20.dp)
+                            )
+                            Image(
+                                painter = painterResource("botonComprobar.png"),
+                                contentDescription = "Boton para comprobar una entrada",
+                                modifier = Modifier
+                                    .clickable(onClick = {ventanaActiva = "ventanaComprobarEntrada"
                                         user = ""
                                         password = ""})
                                     .width(150.dp)
@@ -1159,6 +1229,80 @@ fun App() {
                                     .height(50.dp)
                             )
                         }
+                    }
+                }
+            }
+        }
+
+        "ventanaComprobarEntrada" -> {
+            var codigo by remember {mutableStateOf("") }
+            var usuarioEntrada by remember {mutableStateOf("") }
+            var pelicula by remember {mutableStateOf("") }
+            var mostrando by remember {mutableStateOf("") }
+            MaterialTheme{
+                Box(
+                    modifier = Modifier.fillMaxSize().background(naranja)
+                ) {
+                    Image(
+                        painter = painterResource("ventanaInicio.png"),
+                        contentDescription = "Ventana de Inicio",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    IconButton(onClick = {ventanaActiva = "ventanaAdmin"}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                            Row {
+                                if (mostrando == "1") {
+                                    Text("La entrada pertenete al usuario $usuarioEntrada para la pelicula $pelicula",  color = Color.White)
+                                }
+                            }
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            Row(modifier = Modifier.background(Color.White)) {
+                                TextField(
+                                    value = codigo,
+                                    onValueChange = { codigo = it },
+                                    label = { Text("Codigo de la entrada a comprobar") }
+                                )
+                            }
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            Row {
+                                Image(
+                                    painter = painterResource("botonComprobar.png"),
+                                    contentDescription = "Boton para comprobar una entrada",
+                                    modifier = Modifier
+                                        .clickable {
+                                            var sql = "SELECT USUARIO, PELICULA FROM ENTRADAS WHERE CODIGO = '$codigo'"
+                                            val statement = conexion.createStatement()
+                                            val resultSet = statement.executeQuery(sql)
+                                            while (resultSet.next()) {
+                                                usuarioEntrada = resultSet.getString("USUARIO")
+                                                pelicula = resultSet.getString("PELICULA")
+                                            }
+                                            mostrando = "1"
+                                        }
+                                        .width(150.dp)
+                                        .height(50.dp)
+                                )
+                                Spacer(modifier = Modifier.padding(10.dp))
+                                Image(
+                                    painter = painterResource("botonLimpiar.png"),
+                                    contentDescription = "Boton Limpiear Celdas",
+                                    modifier = Modifier
+                                        .clickable {
+                                            codigo = ""
+                                            usuarioEntrada = ""
+                                            pelicula = ""
+                                            mostrando = ""
+                                        }
+                                        .width(150.dp)
+                                        .height(50.dp)
+                                )
+                            }
                     }
                 }
             }
