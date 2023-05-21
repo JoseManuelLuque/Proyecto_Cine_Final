@@ -472,7 +472,7 @@ fun App() {
                             }
                         Spacer(modifier = Modifier.padding(30.dp))
                         Row{
-                            Text(text = "Si quiere ver las sesiones inicie sesión", fontSize = 35.sp, color = Color.White)
+                            Text(text = "Si quiere comprar entradas incie sesion", fontSize = 35.sp, color = Color.White)
                         }
                         }
 
@@ -928,7 +928,7 @@ fun App() {
                             contentDescription = "Boton para elimniar un usuario",
                             modifier = Modifier
                                 .clickable {
-                                    val comandoComprobar = "SELECT USUARIO FROM USUARIOS WHERE USUARIO = '$eliminarUsuario'"
+                                    val comandoComprobar = "SELECT USUARIO FROM USUARIOS WHERE (`Usuario` = '$eliminarUsuario');"
                                     val statement1 = conexion.createStatement()
                                     val resultSet1 = statement1.executeQuery(comandoComprobar)
                                     var aux = ""
@@ -940,10 +940,19 @@ fun App() {
                                     if (aux == eliminarUsuario) {
                                         val comando =
                                             conexion.prepareStatement("DELETE FROM USUARIOS WHERE USUARIO = ?")
-                                        comando.run {
-                                            setString(1, eliminarUsuario)
+
+                                        val comando2 =
+                                            conexion.prepareStatement("DELETE FROM ENTRADAS WHERE USUARIO = ?")
+
+                                        comando2.run {
+                                            setString(1, aux)
                                             executeUpdate()
-                                            println("Usuario $eliminarUsuario eliminado")
+                                        }
+
+                                        comando.run {
+                                            setString(1, aux)
+                                            executeUpdate()
+                                            println("Usuario $aux eliminado")
                                         }
                                     }
                                     else println("Usuario $eliminarUsuario no existe")
@@ -1311,14 +1320,7 @@ fun App() {
 }
 
 fun generarEntrada (): String{
-    val url = "jdbc:mysql://localhost:3306/PROGRAMACION"
-    val usuario = "root"
-    val contrasenia = "Alberti956"
-    Class.forName("com.mysql.cj.jdbc.Driver")
-    val conexion = DriverManager.getConnection(url, usuario, contrasenia)
-
     var codigoEntrada = ""
-
     for (i in 1..12){
         val letraMay = (65..90).random()
         val letraMin = (97..122).random()
@@ -1329,19 +1331,5 @@ fun generarEntrada (): String{
             3 -> { codigoEntrada += numero.toChar() }
         }
     }
-
-    val comandoComprobar = "SELECT USUARIO FROM USUARIOS WHERE USUARIO = '$codigoEntrada'"
-    val statement1 = conexion.createStatement()
-    val resultado = statement1.executeQuery(comandoComprobar)
-    var aux = ""
-    while (resultado.next()) {
-        val usuarioExiste = resultado.getString("USUARIO")
-        aux = usuarioExiste
-    }
-
-    if (aux == codigoEntrada){
-        TODO()
-    }
-
-    else{return codigoEntrada}
+    return codigoEntrada
 }
