@@ -4,17 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
@@ -136,19 +138,35 @@ fun App() {
                             TextField(
                                 value = user,
                                 onValueChange = { user = it },
-                                label = { Text("Usuario") }
+                                label = { Text("Usuario") },
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Person,
+                                        contentDescription = "Person Icon"
+                                    )
+                                }
                             )
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
                         Row(
                             modifier = Modifier.background(Color.White)
                         ){
+                            var visible by remember { mutableStateOf(1) }
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
                                 label = { Text("Contraseña") },
-                                visualTransformation = PasswordVisualTransformation(),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                                visualTransformation = if (visible == 1) PasswordVisualTransformation() else VisualTransformation.None,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = if (visible == 1) Icons.Default.Lock else Icons.Default.ThumbUp,
+                                        contentDescription = "Lock/Unlock Icon",
+                                        modifier = Modifier.clickable {
+                                            visible = visible.inv()
+                                        }
+                                    )
+                                }
                             )
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -211,19 +229,35 @@ fun App() {
                             TextField(
                                 value = user,
                                 onValueChange = { user = it },
-                                label = { Text("Usuario") }
+                                label = { Text("Usuario") },
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Person,
+                                        contentDescription = "Person Icon"
+                                    )
+                                }
                             )
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
                         Row(
                             modifier = Modifier.background(Color.White)
-                        ){
+                        ) {
+                            var visible by remember { mutableStateOf(1) }
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
                                 label = { Text("Contraseña") },
-                                visualTransformation = PasswordVisualTransformation(),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                                visualTransformation = if (visible == 1) PasswordVisualTransformation() else VisualTransformation.None,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = if (visible == 1) Icons.Default.Lock else Icons.Default.ThumbUp,
+                                        contentDescription = "Lock/Unlock Icon",
+                                        modifier = Modifier.clickable {
+                                            visible = visible.inv()
+                                        }
+                                    )
+                                }
                             )
                         }
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -302,7 +336,6 @@ fun App() {
                                             println("Bienvenido Admin $user")
                                             ventanaActiva = "ventanaAdmin"
                                         }
-                                        else println("Inicio de sesion Fallido")
                                     })
                                     .width(150.dp)
                                     .height(50.dp)
@@ -502,37 +535,70 @@ fun App() {
         }
 
         "ventanaCompra" -> {
-            MaterialTheme{
+            MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
-                ){
-                    var sql = "SELECT PORTADA, TITULO FROM PELICULAS WHERE POSICIONCARTELERA = '$peliActiva'"
-                    var statement = conexion.createStatement()
-                    var resultSet = statement.executeQuery(sql)
+                ) {
+                    val sql = "SELECT PORTADA, TITULO FROM PELICULAS WHERE POSICIONCARTELERA = '$peliActiva'"
+                    val statement = conexion.createStatement()
+                    val resultSet = statement.executeQuery(sql)
                     var titulo = ""
                     var portada = ""
                     while (resultSet.next()) {
                         titulo = resultSet.getString("TITULO")
                         portada = resultSet.getString("PORTADA")
                     }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxSize()
-                    ){
-                        Text(titulo, fontSize = 40.sp)
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        Image(
-                            painter = painterResource(portada),
-                            contentDescription = "Portada de pelicula a comprar",
-                            modifier = Modifier.size(150.dp)
-                        )
+
+                    var cantidadEntradas by remember { mutableStateOf("") }
+                    var mensajeConfirmacion by remember { mutableStateOf("") }
+
+                    IconButton(onClick = {ventanaActiva = "ventanaCarteleraCompra"}) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
+
+                    Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text(titulo, fontSize = 40.sp)
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            Image(
+                                painter = painterResource(portada),
+                                contentDescription = "Portada de pelicula a comprar",
+                                modifier = Modifier.size(150.dp)
+                            )
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            TextField(
+                                value = cantidadEntradas,
+                                onValueChange = { cantidadEntradas = it },
+                                label = { Text("Cantidad de entradas") },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                            )
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            Button(onClick = {
+                                for (i in 1..cantidadEntradas.toInt()){
+                                    val comando = conexion.prepareStatement("INSERT INTO ENTRADAS (Codigo, Usuario, Pelicula) VALUES (?, ?, ?)")
+                                    val codigo = generarEntrada()
+                                    comando.run {
+                                        setString(1, codigo)
+                                        setString(2, user)
+                                        setString(3, titulo)
+                                        executeUpdate()
+                                    }
+                                }
+                                mensajeConfirmacion = "Compra realizada. $cantidadEntradas entradas para $titulo."
+                            }) {
+                                Text("Confirmar compra")
+                            }
+                            Spacer(modifier = Modifier.padding(10.dp))
+                            Text(mensajeConfirmacion, textAlign = TextAlign.Center)
+                        }
                 }
             }
         }
 
-       /*TODO*/"ventanaCarteleraCompra" -> {
+       "ventanaCarteleraCompra" -> {
             MaterialTheme{
                 Box(
                     modifier = Modifier.fillMaxSize().background(naranja)
@@ -542,7 +608,7 @@ fun App() {
                         contentDescription = "Ventana de Cartelera",
                         modifier = Modifier.fillMaxSize()
                     )
-                    IconButton(onClick = {ventanaActiva = "ventanaInicio"}) {
+                    IconButton(onClick = {ventanaActiva = "ventanaUsuario"}) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Ir hacia atras")
                     }
                     Column(
@@ -606,8 +672,6 @@ fun App() {
                                     .size(150.dp)
                                     .clickable {
                                         peliActiva = "1"
-
-
                                         ventanaActiva = "ventanaCompra"
                                     }
                             )
@@ -620,7 +684,7 @@ fun App() {
                                     .size(150.dp)
                                     .clickable {
                                         peliActiva = "2"
-
+                                        ventanaActiva = "ventanaCompra"
                                     }
                             )
 
@@ -631,7 +695,7 @@ fun App() {
                                     .size(150.dp)
                                     .clickable {
                                         peliActiva = "3"
-
+                                        ventanaActiva = "ventanaCompra"
                                     }
                             )
                         }
@@ -644,7 +708,7 @@ fun App() {
                                     .size(150.dp)
                                     .clickable {
                                         peliActiva = "4"
-
+                                        ventanaActiva = "ventanaCompra"
                                     }
                             )
 
@@ -655,7 +719,7 @@ fun App() {
                                     .size(150.dp)
                                     .clickable {
                                         peliActiva = "5"
-
+                                        ventanaActiva = "ventanaCompra"
                                     }
                             )
 
@@ -666,7 +730,7 @@ fun App() {
                                     .size(150.dp)
                                     .clickable {
                                         peliActiva = "6"
-
+                                        ventanaActiva = "ventanaCompra"
                                     }
                             )
                         }
@@ -674,6 +738,10 @@ fun App() {
 
                 }
             }
+        }
+
+        "ventanaVerEntradas" -> {
+
         }
 
         //Parte Administrativa
@@ -824,7 +892,7 @@ fun App() {
                     modifier = Modifier.fillMaxSize().background(naranja)
                 ) {
                     Image(
-                        painter = painterResource("ventanaRegistrarAdministrador.png"),
+                        painter = painterResource("ventanaRegistro.png"),
                         contentDescription = "Ventana de Inicio",
                         modifier = Modifier.fillMaxSize()
                     )
@@ -1071,7 +1139,6 @@ fun App() {
                                         val statement1 = conexion.createStatement()
                                         statement1.execute(sql)
 
-
                                         val sql1 = "UPDATE PELICULAS SET PosicionCartelera = 1 WHERE Titulo = '$pelicula1'"
                                         val sql2 = "UPDATE PELICULAS SET PosicionCartelera = 2 WHERE Titulo = '$pelicula2'"
                                         val sql3 = "UPDATE PELICULAS SET PosicionCartelera = 3 WHERE Titulo = '$pelicula3'"
@@ -1099,7 +1166,7 @@ fun App() {
     }
 }
 
-fun generarEntrada (usuario: Usuario): String{
+fun generarEntrada (): String{
     val url = "jdbc:mysql://localhost:3306/PROGRAMACION"
     val usuario = "root"
     val contrasenia = "Alberti956"

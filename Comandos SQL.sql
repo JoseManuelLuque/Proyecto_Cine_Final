@@ -54,7 +54,9 @@ FOREIGN KEY(Sala) REFERENCES Salas(Numero)
 
 --Tabla de Entradas
 CREATE TABLE ENTRADAS (
-Codigo Numeric(2) PRIMARY KEY,
+Codigo VARCHAR(12) PRIMARY KEY,
 Usuario VARCHAR(9),
-FOREIGN KEY(usuario) REFERENCES usuarios(usuario)
+Pelicula VARCHAR(100),
+FOREIGN KEY(usuario) REFERENCES usuarios(usuario),
+FOREIGN KEY(Pelicula) REFERENCES peliculas(titulo)
 );
